@@ -1,0 +1,43 @@
+patient :
+	login                                               :api-end-point -> method :post       url :patient/sign-in  
+	logout                                              :api-end-point -> method :get        url :patient/sign-out  
+	view profile                                        :api-end-point -> method :get        url :patient/view-profile  
+	view report                                         :api-end-point -> method :get        url :patient/view-report  
+	share report                                        :api-end-point -> method :put        url :patient/share-report  
+	view hospitals having access                        :api-end-point -> method :get        url :patient/view-hospital-access  
+	view insurance companies having access              :api-end-point -> method :get        url :patient/view-insurance-access 
+	
+hospital :
+	login                                               :api-end-point -> method :post       url :hospital/sign-in   
+	logout                                              :api-end-point -> method :get        url :hospital/sign-out    
+	view profile                                        :api-end-point -> method :get        url :hospital/view-profile    
+	create patient                                      :api-end-point -> method :post       url :hospital/create-patient    
+	generate patient data                               :api-end-point -> method :post       url :hospital/generate-patient-data    
+	update patient data                                 :api-end-point -> method :put        url :hospital/update-patient-data    
+	share patient data to other hospitals               :api-end-point -> method :put        url :hospital/share-to-hospital    
+	share patient data to insurance companies           :api-end-point -> method :put        url :hospital/share-to-insurance    
+	view hospitals having access to data                :api-end-point -> method :get        url :hospital/view-auth-hospital-list    
+	view insurance companies having access to data      :api-end-point -> method :get        url :hospital/view-auth-insurance-list"    
+	generate policy claim                               :api-end-point -> method :get        url :hospital/generate-policy-claim    
+	view policy claim details                           :api-end-point -> method :get        url :hospital/view-policy-claim    
+	-- revoke access to data for insurance companies       :api-end-point -> method :        url :
+insurance :
+	login                                               :api-end-point -> method :post       url :insurance/sign-in
+	logout                                              :api-end-point -> method :get        url :insurance/sign-out
+	view profile details                                :api-end-point -> method :get        url :insurance/view-profile-details
+	view policy claims                                  :api-end-point -> method :get        url :insurance/view-policy-claims
+	view data attached to policy claims                 :api-end-point -> method :get        url :insurance/view-data-attached-to-policy-claims
+	accept claim                                        :api-end-point -> method :post       url :insurance/accept-claim
+	reject claim                                        :api-end-point -> method :post       url :insurance/reject-claim
+	view policy history                                 :api-end-point -> method :get        url :insurance/view-policy-history
+	
+admin :
+	login                                               :api-end-point -> method :post       url :admin/sign-in
+	logout                                              :api-end-point -> method :get        url :admin/sign-out
+	create hospital                                     :api-end-point -> method :post       url :admin/create-hospital
+	delete hospital                                     :api-end-point -> method :delete     url :admin/delete-hospital 
+	create insurance company                            :api-end-point -> method :post       url :admin/create-insurance-company 
+	delete insurance company                            :api-end-point -> method :delete     url :admin/delete-insurance-company
+	
+common :
+	view patient details                                :api-end-point -> method :get        url :common/view-patient-details
