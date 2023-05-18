@@ -1,38 +1,21 @@
 const express = require("express");
 const router = express.Router();
+const insuranceController = require('../controllers/insuranceController')
 
-router.post("/sign-in", ()=>{
-    
-});
+router.post("/sign-in", insuranceController.insuranceSignInController);
 
-router.get("/sign-out", ()=>{
-    
-});
+router.get("/sign-out", insuranceController.insuranceSignOutController);
 
-router.get("/view-profile-details", ()=>{
-    
-});
+router.get("/view-profile-details", insuranceController.insuranceViewProfileController);
 
-router.get("/view-policy-claims", ()=>{
-    
-});
+router.get("/view-policy-claims", insuranceController.insuranceViewPolicyClaimsController);
 
-router.get("/view-data-attached-to-policy-claims", ()=>{
-    
-});
+router.get("/view-data-attached-to-policy-claims", insuranceController.insuranceViewPolicyClaimsDataController);
 
-router.post("/accept-claim", ()=>{
-    
-});
+router.post("/accept-claim", insuranceController.insuranceAcceptController);
 
-router.post("/reject-claim", ()=>{
-    
-});
+router.post("/reject-claim", insuranceController.insuranceRejectController);
 
-router.get("/view-policy-history", ()=>{
-    
-});
-
-
+router.get("/view-policy-history", insuranceController.insuranceViewPolicyController);
 
 module.exports = router;
