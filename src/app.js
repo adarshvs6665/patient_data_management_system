@@ -10,7 +10,6 @@ const patientRoutes = require("./routes/patientRoutes")
 const commonRoutes = require("./routes/commonRoutes")
 
 dotenv.config();
-const PORT = process.env.PORT || 5001
 const app = express();
 
 //mongo link

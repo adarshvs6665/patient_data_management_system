@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "start": "node src/app.js",
-    "dev": "nodemon src/app.js"
+    "dev": "nodemon src/app.js",
+    "createAdmin": "node src/utils/createAdminJob.js"
   },
   "dependencies": {
     "concurrently": "^8.0.1",
