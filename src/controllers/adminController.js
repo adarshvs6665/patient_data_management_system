@@ -7,12 +7,12 @@ const adminSignInController = async (req, res) => {
   const admin = await Admin.findOne({ email });
   if (admin) {
     if (password === admin.password) {
-      res.json({ message: "Login Sucess" });
+      res.status(200).json({ status:"success", message: "Login Sucess" ,role:"admin", id:admin.id});
     } else {
-      res.json({ message: "Invalid Password" });
+      res.status(400).json({status:"failed", message: "Invalid Password" });
     }
   } else {
-    res.json({ message: "Invalid Email" });
+    res.status(400).json({status:"failed", message: "Invalid Email" });
   }
 };
 

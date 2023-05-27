@@ -6,12 +6,12 @@ const hospitalSignInController = async (req, res) => {
     const hospital = await Hospital.findOne({ email });
     if (hospital) {
       if (password === hospital.password) {
-        res.json({ message: "Login Sucess" });
+        res.status(200).json({ status:"success", message: "Login Sucess" ,role:"hospital", id:hospital.id});
       } else {
-        res.json({ message: "Invalid Password" });
+        res.status(400).json({status:"failed", message: "Invalid Password" });
       }
     } else {
-      res.json({ message: "Invalid Email" });
+      res.status(400).json({status:"failed", message: "Invalid Email" });
     }
 };
 
