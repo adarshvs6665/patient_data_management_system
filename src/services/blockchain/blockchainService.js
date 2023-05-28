@@ -4,7 +4,7 @@ require("dotenv").config();
 const Web3 = require("web3");
 
 // importing artifacts
-const contractArtifact = require("../../build/contracts/MedicalRecords.json");
+const contractArtifact = require("../../../build/contracts/MedicalRecords.json");
 
 // address of deployed contract
 const contractAddress = process.env.MEDICAL_RECORD_CONTACT_ADDR;
