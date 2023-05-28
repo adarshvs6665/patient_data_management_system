@@ -220,7 +220,7 @@ const fetchAllInsuranceCompaniesService = async () => {
             status: "success",
             message: "fetched insurance companies successfully",
             data: {
-                insuranceCompanies
+                insuranceCompanies,
             },
         };
         return response;
@@ -238,13 +238,13 @@ const fetchAllInsuranceCompaniesService = async () => {
 };
 
 // update patient data ( newPatientData is stringified JSON)
-const updatePatientDataService = async(
+const updatePatientDataService = async (
     hospitalAddress,
     patientAddress,
     newPatientData
 ) => {
     try {
-        // PATIENT DATA FORMAT 
+        // PATIENT DATA FORMAT
 
         // const patientDataJSON = {
         //     content: "exists",
@@ -275,10 +275,10 @@ const updatePatientDataService = async(
         };
         return response;
     }
-}
+};
 
 // fetch authorized hospitals for a patient
-const fetchAuthorizedHospitalsService = async(patientAddress) => {
+const fetchAuthorizedHospitalsService = async (patientAddress) => {
     try {
         // Call the getAuthorizedHospitals function in the contract
         const authorizedHospitals = await contract.methods
@@ -305,10 +305,10 @@ const fetchAuthorizedHospitalsService = async(patientAddress) => {
         };
         return response;
     }
-}
+};
 
 // fetch authorized insurance companies for a patient
-async function fetchAuthorizedInsuranceCompaniesService(patientAddress) {
+const fetchAuthorizedInsuranceCompaniesService = async (patientAddress) => {
     try {
         // Call the getAuthorizedInsuranceCompanies function in the contract
         const authorizedInsuranceCompanies = await contract.methods
@@ -323,7 +323,7 @@ async function fetchAuthorizedInsuranceCompaniesService(patientAddress) {
             status: "success",
             message: "fetched authorized insurance companies successfully",
             data: {
-                authorizedInsuranceCompanies
+                authorizedInsuranceCompanies,
             },
         };
         return response;
@@ -338,14 +338,20 @@ async function fetchAuthorizedInsuranceCompaniesService(patientAddress) {
         };
         return response;
     }
-}
+};
 
-// Function to add authorized insurance company to the patient
-async function addAuthorizedInsuranceCompanyService(hospitalAddress, patientAddress, insuranceAddress) {
+// function to authorize an insurance company for the patient
+const addAuthorizedInsuranceCompanyService = async (
+    hospitalAddress,
+    patientAddress,
+    insuranceAddress
+) => {
     try {
-        await contract.methods.addAuthorizedInsuranceCompany(patientAddress, insuranceAddress).send({
-            from: hospitalAddress
-        });
+        await contract.methods
+            .addAuthorizedInsuranceCompany(patientAddress, insuranceAddress)
+            .send({
+                from: hospitalAddress,
+            });
         // console.log('Insurance company added successfully.');
         const response = {
             status: "success",
@@ -363,18 +369,207 @@ async function addAuthorizedInsuranceCompanyService(hospitalAddress, patientAddr
         };
         return response;
     }
-}
+};
+
+// function to authorize a hospital company for the patient
+const addAuthorizedHospitalService = async (
+    hospitalAddress,
+    patientAddress,
+    hospitalAddressToBeAuthorized
+) => {
+    try {
+        await contract.methods
+            .addAuthorizedHospital(
+                patientAddress,
+                hospitalAddressToBeAuthorized
+            )
+            .send({
+                from: hospitalAddress,
+            });
+        // console.log("Insurance company added successfully.");
+
+        const response = {
+            status: "success",
+            message: "authorized hospital successfully",
+        };
+        return response;
+    } catch (error) {
+        // console.error("Error adding insurance company:", error);
+        const response = {
+            status: "failed",
+            message: "error while authorizing hospital",
+            data: {
+                error: error.message,
+            },
+        };
+        return response;
+    }
+};
+
+// function to retrieve all wallet addresses from ganache
+const fetchWalletAddressesService = async () => {
+    try {
+        const accounts = await web3.eth.getAccounts();
+        const response = {
+            status: "success",
+            message: "fetched wallet addresses successfully",
+            data: {
+                length: accounts.length,
+                accounts,
+            },
+        };
+        return response;
+    } catch (error) {
+        const response = {
+            status: "failed",
+            message: "error while fetching wallet addresses",
+            data: {
+                error: error.message,
+            },
+        };
+        return response;
+    }
+};
+
+// fetch medical records contract address
+const fetchMedicalRecordsContractService = async () => {
+    try {
+        const blockNumber = await web3.eth.getBlockNumber();
+        let contractAddresses = [];
+
+        for (let i = 0; i <= blockNumber; i++) {
+            const block = await web3.eth.getBlock(i);
+            for (const txHash of block.transactions) {
+                const receipt = await web3.eth.getTransactionReceipt(txHash);
+                if (receipt.contractAddress) {
+                    contractAddresses.push(receipt.contractAddress);
+                }
+            }
+        }
+
+        const response = {
+            status: "success",
+            message: "fetched medical records contract address successfully",
+            data: {
+                contractAddress:
+                    contractAddresses[contractAddresses.length - 2],
+            },
+        };
+        return response;
+    } catch (error) {
+        const response = {
+            status: "failed",
+            message: "error while fetching medical records contract address",
+            data: {
+                error: error.message,
+            },
+        };
+        return response;
+    }
+};
+
+// fetch information about single patient
+const fetchPatientInfoService = async (patientAddress) => {
+    try {
+        const patientInfo = await contract.methods
+            .getPatientInfo(patientAddress)
+            .call();
+        const response = {
+            status: "success",
+            message: "fetched patient information successfully",
+            data: {
+                patientInfo: patientInfo,
+            },
+        };
+
+        return response;
+    } catch (error) {
+        const response = {
+            status: "failed",
+            message: "error while fetching patient information",
+            data: {
+                error: error.message,
+            },
+        };
+
+        return response;
+    }
+};
+
+// fetch information about single hospital
+const fetchHospitalInfoService = async (hospitalAddress) => {
+    try {
+        const hospitalInfo = await contract.methods
+            .getHospitalInfo(hospitalAddress)
+            .call();
+
+        const response = {
+            status: "success",
+            message: "fetched hospital information successfully",
+            data: {
+                hospitalInfo: hospitalInfo,
+            },
+        };
+
+        return response;
+    } catch (error) {
+        const response = {
+            status: "failed",
+            message: "error while fetching hospital information",
+            data: {
+                error: error.message,
+            },
+        };
+
+        return response;
+    }
+};
+
+// fetch information about single insurance company
+const fetchInsuranceCompanyInfoService = async (insuranceCompanyAddress) => {
+    try {
+        const insuranceCompanyInfo = await contract.methods
+            .getInsuranceCompanyInfo(insuranceCompanyAddress)
+            .call();
+
+        const response = {
+            status: "success",
+            message: "fetched insurance company information successfully",
+            data: {
+                insuranceCompanyInfo: insuranceCompanyInfo,
+            },
+        };
+
+        return response;
+    } catch (error) {
+        const response = {
+            status: "failed",
+            message: "error while fetching insurance company information",
+            data: {
+                error: error.message,
+            },
+        };
+
+        return response;
+    }
+};
 
 module.exports = {
-    fetchAdminAddressService,
+    addAuthorizedHospitalService,
+    addAuthorizedInsuranceCompanyService,
     createHospitalService,
-    fetchAllHospitalsService,
-    createPatientService,
-    fetchAllPatientsService,
     createInsuranceCompanyService,
+    createPatientService,
+    fetchAdminAddressService,
+    fetchAllHospitalsService,
     fetchAllInsuranceCompaniesService,
-    updatePatientDataService,
+    fetchAllPatientsService,
     fetchAuthorizedHospitalsService,
     fetchAuthorizedInsuranceCompaniesService,
-    addAuthorizedInsuranceCompanyService
+    fetchInsuranceCompanyInfoService,
+    fetchMedicalRecordsContractService,
+    fetchPatientInfoService,
+    fetchHospitalInfoService,
+    fetchWalletAddressesService,
+    updatePatientDataService,
 };
