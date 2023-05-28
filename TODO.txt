@@ -1,0 +1,7 @@
+Javascript
+    function to get single hospital details
+    function to get single patient details
+    function to get single insurance company details
+
+Javascript and Solidity
+    add authorized hospital function
