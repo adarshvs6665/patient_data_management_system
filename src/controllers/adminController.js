@@ -4,7 +4,8 @@ const Insurance = require("../models/insuranceModel");
 const { v4: uuidv4 } = require("uuid");
 
 const {
-    createHospitalService,fetchAllHospitalsService
+    createHospitalService,
+    fetchAllHospitalsService,
 } = require("../services/blockchain/blockchainService");
 
 const adminSignInController = async (req, res) => {
