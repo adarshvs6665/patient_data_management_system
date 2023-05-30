@@ -11,7 +11,7 @@ hospital :
 	login                                               :api-end-point -> method :post       url :hospital/sign-in   
 	logout                                              :api-end-point -> method :get        url :hospital/sign-out    
 	view profile                                        :api-end-point -> method :get        url :hospital/view-profile    
-	create patient                                      :api-end-point -> method :post       url :hospital/create-patient    
+ ✓	create patient                                      :api-end-point -> method :post       url :hospital/create-patient    
 	generate patient data                               :api-end-point -> method :post       url :hospital/generate-patient-data    
 	update patient data                                 :api-end-point -> method :put        url :hospital/update-patient-data    
 	share patient data to other hospitals               :api-end-point -> method :put        url :hospital/share-to-hospital    

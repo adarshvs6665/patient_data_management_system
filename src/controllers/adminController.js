@@ -36,31 +36,35 @@ const adminCreateHospitalController = async (req, res) => {
     wallet: hospitalWalletAddress,
     adminWalletAddress,
   } = req.body;
-  try {
-    if (
-      !name ||
-      !email ||
-      !password ||
-      !address ||
-      !state ||
-      !phone ||
-      !hospitalWalletAddress ||
-      !adminWalletAddress
-    ) {
-      const response = {
+  if (await Hospital.findOne({ email })) {
+    const response = {
         status: "failed",
-        message: "insufficient information",
+        message: "hospital email already in use",
       };
-      res.status(400).json({
+      res.status(409).json({
         response,
       });
-    } else {
-      const hospitalId = uuidv4();
-      createHospitalService(
-        adminWalletAddress,
-        hospitalWalletAddress,
-        hospitalId
-      ).then(async (response) => {
+  } else if (
+    !name ||
+    !email ||
+    !password ||
+    !address ||
+    !state ||
+    !phone ||
+    !hospitalWalletAddress ||
+    !adminWalletAddress
+  ) {
+    const response = {
+      status: "failed",
+      message: "insufficient information",
+    };
+    res.status(400).json({
+      response,
+    });
+  } else {
+    const hospitalId = uuidv4();
+    createHospitalService(adminWalletAddress, hospitalWalletAddress, hospitalId)
+      .then(async (response) => {
         if (response.status != "success") {
           console.log(response);
           res.status(404).json(response);
@@ -87,20 +91,20 @@ const adminCreateHospitalController = async (req, res) => {
           },
         };
         res.status(200).json(responseObj);
+      })
+      .catch((err) => {
+        console.log(err);
+        const response = {
+          status: "failed",
+          message: "Internal error",
+          data: {
+            error: err.message,
+          },
+        };
+        res.status(500).json({
+          response,
+        });
       });
-    }
-  } catch (err) {
-    console.log(err);
-    const response = {
-      status: "failed",
-      message: "Internal error",
-      data: {
-        error: err.message,
-      },
-    };
-    res.status(500).json({
-      response,
-    });
   }
 };
 
@@ -128,31 +132,40 @@ const adminCreateInsuranceController = async (req, res) => {
     wallet: insuranceWalletAddress,
     adminWalletAddress,
   } = req.body;
-  try {
-    if (
-      !name ||
-      !email ||
-      !password ||
-      !address ||
-      !state ||
-      !phone ||
-      !insuranceWalletAddress ||
-      !adminWalletAddress
-    ) {
-      const response = {
+
+  if (await Insurance.findOne({ email })) {
+    const response = {
         status: "failed",
-        message: "insufficient information",
+        message: "insurance company email already in use",
       };
-      res.status(400).json({
+      res.status(409).json({
         response,
       });
-    } else {
-      const insuranceCompanyId = uuidv4();
-      createInsuranceCompanyService(
-        adminWalletAddress,
-        insuranceWalletAddress,
-        insuranceCompanyId
-      ).then(async (response) => {
+  } else if (
+    !name ||
+    !email ||
+    !password ||
+    !address ||
+    !state ||
+    !phone ||
+    !insuranceWalletAddress ||
+    !adminWalletAddress
+  ) {
+    const response = {
+      status: "failed",
+      message: "insufficient information",
+    };
+    res.status(400).json({
+      response,
+    });
+  } else {
+    const insuranceCompanyId = uuidv4();
+    createInsuranceCompanyService(
+      adminWalletAddress,
+      insuranceWalletAddress,
+      insuranceCompanyId
+    )
+      .then(async (response) => {
         if (response.status != "success") {
           console.log(response);
           res.status(404).json(response);
@@ -179,20 +192,20 @@ const adminCreateInsuranceController = async (req, res) => {
           },
         };
         res.status(200).json(responseObj);
+      })
+      .catch((err) => {
+        console.log(err);
+        const response = {
+          status: "failed",
+          message: "Internal error",
+          data: {
+            error: err.message,
+          },
+        };
+        res.status(500).json({
+          response,
+        });
       });
-    }
-  } catch (err) {
-    console.log(err);
-    const response = {
-      status: "failed",
-      message: "Internal error",
-      data: {
-        error: err.message,
-      },
-    };
-    res.status(500).json({
-      response,
-    });
   }
 };
 

@@ -8,7 +8,7 @@ contract MedicalRecords {
         string patientId;
         address[] authorizedHospitals;
         address[] authorizedInsuranceCompanies;
-        string patientData;
+        string[] patientData;
     }
 
     struct InsuranceCompany {
@@ -104,7 +104,6 @@ contract MedicalRecords {
     ) public onlyHospital {
         patients[patientAddress].patientId = patientId;
         patients[patientAddress].authorizedHospitals.push(msg.sender);
-        patients[patientAddress].patientData = '{"content":"null"}';
 
         // adding patient to the patient list of the hospital
         hospitals[msg.sender].patientAddresses.push(patientAddress);
@@ -178,7 +177,7 @@ contract MedicalRecords {
         address patientAddress,
         string memory newPatientData
     ) public onlyAuthorizedHospital(patientAddress) {
-        patients[patientAddress].patientData = newPatientData;
+        patients[patientAddress].patientData.push(newPatientData);
     }
 
     function getAuthorizedHospitals(

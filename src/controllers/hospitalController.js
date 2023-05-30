@@ -37,33 +37,29 @@ const hospitalCreatePatientController = async (req, res) => {
     wallet: patientWalletAddress,
     hospitalWalletAddress,
   } = req.body;
-  try {
-    if (
-      !name ||
-      !email ||
-      !password ||
-      !gender ||
-      !dob ||
-      !address ||
-      !state ||
-      !phone ||
-      !patientWalletAddress ||
-      !hospitalWalletAddress
-    ) {
-      const response = {
-        status: "failed",
-        message: "insufficient information",
-      };
-      res.status(400).json({
-        response,
-      });
-    } else {
-      const patientId = uuidv4();
-      createPatientService(
-        hospitalWalletAddress,
-        patientWalletAddress,
-        patientId
-      ).then(async (response) => {
+  if (
+    !name ||
+    !email ||
+    !password ||
+    !gender ||
+    !dob ||
+    !address ||
+    !state ||
+    !phone ||
+    !patientWalletAddress ||
+    !hospitalWalletAddress
+  ) {
+    const response = {
+      status: "failed",
+      message: "insufficient information",
+    };
+    res.status(400).json({
+      response,
+    });
+  } else {
+    const patientId = uuidv4();
+    createPatientService(hospitalWalletAddress, patientWalletAddress, patientId)
+      .then(async (response) => {
         if (response.status != "success") {
           console.log(response);
           res.status(404).json(response);
@@ -92,20 +88,20 @@ const hospitalCreatePatientController = async (req, res) => {
           },
         };
         res.status(200).json(responseObj);
+      })
+      .catch((err) => {
+        console.log(err);
+        const response = {
+          status: "failed",
+          message: "Internal error",
+          data: {
+            error: err.message,
+          },
+        };
+        res.status(500).json({
+          response,
+        });
       });
-    }
-  } catch (err) {
-    console.log(err);
-    const response = {
-      status: "failed",
-      message: "Internal error",
-      data: {
-        error: err.message,
-      },
-    };
-    res.status(500).json({
-      response,
-    });
   }
 };
 
