@@ -40,4 +40,5 @@ admin :
 	delete insurance company                            :api-end-point -> method :delete     url :admin/delete-insurance-company
 	
 common :
-	view patient details                                :api-end-point -> method :get        url :common/view-patient-details
+	view patient details of a single patient            :api-end-point -> method :get        url :common/view-patient-details
+	fetch wallet addressess 							:api-end-point -> method :get 		 url :common/fetch-wallet-addresses

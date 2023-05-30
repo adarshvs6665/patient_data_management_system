@@ -1,17 +1,36 @@
 const {
     fetchWalletAddressesService,
+    fetchPatientInfoService,
 } = require("../services/blockchain/blockchainService");
 
-const commonViewPatientDetails = async (req, res) => {};
+const commonViewPatientDetails = async (req, res) => {
+    const { patientAddress } = req.body;
+    if (!patientAddress) {
+        const response = {
+            status: "failed",
+            message: "please provide a patient address",
+        };
+
+        res.status(400).json(response);
+    } else {
+        fetchPatientInfoService(patientAddress).then((response) => {
+            if (response.status != "success") {
+                console.log(response);
+                res.status(404).json(response);
+            }
+            res.status(200).json(response);
+        });
+    }
+};
 
 const fetchAllWalletAddressesController = async (req, res) => {
     console.log("hit");
     try {
         fetchWalletAddressesService().then((response) => {
             if (response.status == "success") {
-                res.status(200).send(response);
+                res.status(200).json(response);
             } else {
-                res.status(400).send(response);
+                res.status(404).json(response);
             }
         });
     } catch (error) {
@@ -19,7 +38,7 @@ const fetchAllWalletAddressesController = async (req, res) => {
             status: "failed",
             message: error.message,
         };
-        res.status(400).send(response);
+        res.status(500).json(response);
     }
 };
 
