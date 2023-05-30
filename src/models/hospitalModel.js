@@ -3,6 +3,10 @@ const Schema = mongoose.Schema;
 
 const HospitalSchema = new Schema(
     {
+        hospitalId: {
+            type: String,
+            required: true,
+        },
         name: {
             type: String,
             required: true,

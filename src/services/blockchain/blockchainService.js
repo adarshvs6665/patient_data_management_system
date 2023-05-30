@@ -62,6 +62,7 @@ const createHospitalService = async (
                 transactionHash: result.transactionHash,
             },
         };
+        console.log(response);
         return response;
     } catch (error) {
         // console.error("Error calling createHospital:", error);

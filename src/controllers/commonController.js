@@ -4,7 +4,7 @@ const {
 } = require("../services/blockchain/blockchainService");
 
 const commonViewPatientDetails = async (req, res) => {
-    const { patientAddress } = req.body;
+    const { patientAddress } = req.query;
     if (!patientAddress) {
         const response = {
             status: "failed",
@@ -24,7 +24,6 @@ const commonViewPatientDetails = async (req, res) => {
 };
 
 const fetchAllWalletAddressesController = async (req, res) => {
-    console.log("hit");
     try {
         fetchWalletAddressesService().then((response) => {
             if (response.status == "success") {
