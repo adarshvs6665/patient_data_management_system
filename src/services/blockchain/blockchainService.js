@@ -192,7 +192,6 @@ const createInsuranceCompanyService = async (
         };
         return response;
     } catch (error) {
-        // console.error("Error calling createInsuranceCompany:", error);
         const response = {
             status: "failed",
             message: "error while creating insurance company",
