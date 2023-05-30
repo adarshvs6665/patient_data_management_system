@@ -8,10 +8,19 @@ router.post("/sign-out", adminControllers.adminSignOutController);
 
 router.post("/create-hospital", adminControllers.adminCreateHospitalController);
 
-router.delete("/delete-hospital", adminControllers.adminDeleteHospitalController);
+router.delete(
+  "/delete-hospital",
+  adminControllers.adminDeleteHospitalController
+);
 
-router.post("/create-insurance-company", adminControllers.adminCreateInsuranceController);
+router.post(
+  "/create-insurance-company",
+  adminControllers.adminCreateInsuranceController
+);
 
-router.delete("/delete-insurance-company", adminControllers.adminDeleteInsuranceController);
+router.delete(
+  "/delete-insurance-company",
+  adminControllers.adminDeleteInsuranceController
+);
 
 module.exports = router;

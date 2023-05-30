@@ -13,13 +13,13 @@ router.get("/view-report", patientController.patientViewReportController);
 router.put("/share-report", patientController.patientShareReportController);
 
 router.get(
-    "/view-hospital-access",
-    patientController.patientViewHospitalAccessController
+  "/view-hospital-access",
+  patientController.patientViewHospitalAccessController
 );
 
 router.get(
-    "/view-insurance-access",
-    patientController.patientViewInsuranceAccessController
+  "/view-insurance-access",
+  patientController.patientViewInsuranceAccessController
 );
 
 module.exports = router;
