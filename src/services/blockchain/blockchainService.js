@@ -183,11 +183,6 @@ const createInsuranceCompanyService = async (
         const gas = await transaction.estimateGas({ from: adminAccount });
         const result = await transaction.send({ from: adminAccount, gas });
 
-        // console.log(
-        //     "Insurance company creation transaction successful. Transaction hash:",
-        //     result.transactionHash
-        // );
-
         const response = {
             status: "success",
             message: "created insurance company successfully",
