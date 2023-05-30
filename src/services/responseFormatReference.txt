@@ -17,3 +17,10 @@ error response :
         },
     };
     return response;
+
+
+const response = {
+            status: "failed",
+            message: error.message,
+        };
+        return response;
