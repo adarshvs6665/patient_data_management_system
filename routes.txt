@@ -34,9 +34,9 @@ insurance :
 admin :
 	login                                               :api-end-point -> method :post       url :admin/sign-in
 	logout                                              :api-end-point -> method :get        url :admin/sign-out
- ✓	create hospital                                     :api-end-point -> method :post       url :admin/create-hospital
+ ✓	create hospital                                     :api-end-point -> method :post       url :admin/create-hospital 									Body : name,email,password,address,state,phone,wallet,adminWalletAddress
 	delete hospital                                     :api-end-point -> method :delete     url :admin/delete-hospital 
- ✓	create insurance company                            :api-end-point -> method :post       url :admin/create-insurance-company 
+ ✓	create insurance company                            :api-end-point -> method :post       url :admin/create-insurance-company 							Body : name,email,password,address,state,phone,wallet,adminWalletAddress
 	delete insurance company                            :api-end-point -> method :delete     url :admin/delete-insurance-company
 	
 common :
