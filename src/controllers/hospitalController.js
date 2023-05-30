@@ -1,5 +1,10 @@
 const Patient = require("../models/patientModel");
 const Hospital = require("../models/hospitalModel");
+const { v4: uuidv4 } = require("uuid");
+
+const {
+  createPatientService,
+} = require("../services/blockchain/blockchainService");
 
 const hospitalSignInController = async (req, res) => {
   const { email, password } = req.body;
@@ -20,35 +25,30 @@ const hospitalSignOutController = async (req, res) => {};
 const hospitalViewProfileController = async (req, res) => {};
 
 const hospitalCreatePatientController = async (req, res) => {
-  const patient = new Patient(req.body);
-  try {
-    const result = await patient.save();
-    res.json(result);
-  } catch (err) {
-    console.log(err);
-    res.json(err);
-  }
-
   const {
     name,
     email,
     password,
+    gender,
+    dob,
     address,
     state,
     phone,
-    wallet: insuranceWalletAddress,
-    adminWalletAddress,
+    wallet: patientWalletAddress,
+    hospitalWalletAddress,
   } = req.body;
   try {
     if (
       !name ||
       !email ||
       !password ||
+      !gender ||
+      !dob ||
       !address ||
       !state ||
       !phone ||
-      !insuranceWalletAddress ||
-      !adminWalletAddress
+      !patientWalletAddress ||
+      !hospitalWalletAddress
     ) {
       const response = {
         status: "failed",
@@ -58,35 +58,37 @@ const hospitalCreatePatientController = async (req, res) => {
         response,
       });
     } else {
-      const insuranceCompanyId = uuidv4();
-      createInsuranceCompanyService(
-        adminWalletAddress,
-        insuranceWalletAddress,
-        insuranceCompanyId
+      const patientId = uuidv4();
+      createPatientService(
+        hospitalWalletAddress,
+        patientWalletAddress,
+        patientId
       ).then(async (response) => {
         if (response.status != "success") {
           console.log(response);
           res.status(404).json(response);
         }
-        const insuranceCompany = new Insurance({
-          insuranceCompanyId,
+        const patient = new Patient({
+          patientId,
           name,
           email,
           password,
+          gender,
+          dob,
           address,
           state,
           phone,
-          wallet: insuranceWalletAddress,
+          wallet: patientWalletAddress,
         });
-        const result = await insuranceCompany.save();
+        const result = await patient.save();
         const { transactionHash } = response.data;
-        const { password: rmPass, ...insuranceCompanyData } = result._doc;
+        const { password: rmPass, ...patientData } = result._doc;
         const responseObj = {
           status: "success",
-          message: "created insurance company successfully",
+          message: "created patient successfully",
           data: {
             transactionHash,
-            ...insuranceCompanyData,
+            ...patientData,
           },
         };
         res.status(200).json(responseObj);

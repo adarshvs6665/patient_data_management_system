@@ -3,6 +3,10 @@ const Schema = mongoose.Schema;
 
 const patientSchema = new Schema(
     {
+        patientId: {
+            type: String,
+            required: true,
+        },
         name: {
             type: String,
             required: true,
@@ -23,7 +27,7 @@ const patientSchema = new Schema(
             required: true,
         },
         dob: {
-            type: Date,
+            type: String,
             required: true,
         },
         address: {
