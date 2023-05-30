@@ -245,14 +245,20 @@ const updatePatientDataService = async (
     // };
 
     // Call the updatePatientData function
-    await contract.methods
-      .updatePatientData(patientAddress, newPatientData)
-      .send({ from: hospitalAddress });
+    const transaction = contract.methods.updatePatientData(
+      patientAddress,
+      JSON.stringify(newPatientData)
+    );
+    const gas = await transaction.estimateGas({ from: hospitalAddress });
+    const result = await transaction.send({ from: hospitalAddress, gas });
 
     // console.log("Patient data updated successfully!");
     const response = {
       status: "success",
       message: "updated patient data successfully",
+      data: {
+        transactionHash: result.transactionHash,
+      },
     };
     return response;
   } catch (error) {

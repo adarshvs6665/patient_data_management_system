@@ -4,6 +4,7 @@ const { v4: uuidv4 } = require("uuid");
 
 const {
   createPatientService,
+  updatePatientDataService,
 } = require("../services/blockchain/blockchainService");
 
 const hospitalSignInController = async (req, res) => {
@@ -25,6 +26,7 @@ const hospitalSignOutController = async (req, res) => {};
 const hospitalViewProfileController = async (req, res) => {};
 
 const hospitalCreatePatientController = async (req, res) => {
+  // destructering data from request body
   const {
     name,
     email,
@@ -37,6 +39,8 @@ const hospitalCreatePatientController = async (req, res) => {
     wallet: patientWalletAddress,
     hospitalWalletAddress,
   } = req.body;
+
+  // handles when required data is not passed to the endpoint
   if (
     !name ||
     !email ||
@@ -105,9 +109,64 @@ const hospitalCreatePatientController = async (req, res) => {
   }
 };
 
-const hospitalGeneratePatientDataController = async (req, res) => {};
+const hospitalUpdatePatientMedicalReportController = async (req, res) => {
+  // destructering data from request body
+  const { hospitalWalletAddress, patientId, patientData, hospitalId } =
+    req.body;
+  const patient = await Patient.findOne({ patientId });
 
-const hospitalUpdatePatientDataController = async (req, res) => {};
+  // handles when required data is not passed to the endpoint
+  if (!hospitalWalletAddress || !patientId || !hospitalId || !patientData) {
+    const response = {
+      status: "failed",
+      message: "insufficient information",
+    };
+    res.status(400).json({
+      response,
+    });
+  }
+  // handles when patient does not exist
+  else if (!patient) {
+    const response = {
+      status: "failed",
+      message: "patient does not exist",
+    };
+    res.status(404).json({
+      response,
+    });
+  } else {
+    patientData.hospitalId = hospitalId;
+    patientData.reportId = uuidv4();
+
+    const patientWalletAddress = patient.wallet;
+    updatePatientDataService(
+      hospitalWalletAddress,
+      patientWalletAddress,
+      patientData
+    )
+      .then(async (response) => {
+        if (response.status != "success") {
+          console.log(response);
+          res.status(404).json(response);
+        } else {
+          res.status(200).json(response);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        const response = {
+          status: "failed",
+          message: "Internal error",
+          data: {
+            error: err.message,
+          },
+        };
+        res.status(500).json({
+          response,
+        });
+      });
+  }
+};
 
 const hospitalShareToHospitalController = async (req, res) => {};
 
@@ -126,8 +185,7 @@ module.exports = {
   hospitalSignOutController,
   hospitalViewProfileController,
   hospitalCreatePatientController,
-  hospitalGeneratePatientDataController,
-  hospitalUpdatePatientDataController,
+  hospitalUpdatePatientMedicalReportController,
   hospitalShareToHospitalController,
   hospitalShareToInsuranceController,
   hospitalViewHospitalController,

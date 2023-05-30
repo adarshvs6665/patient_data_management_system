@@ -1,25 +1,44 @@
+const Patient = require("../models/patientModel");
 const {
   fetchWalletAddressesService,
   fetchPatientInfoService,
 } = require("../services/blockchain/blockchainService");
 
-const commonViewPatientDetails = async (req, res) => {
-  const { patientAddress } = req.query;
-  if (!patientAddress) {
+const fetchSinglePatientDetails = async (req, res) => {
+  const { patientId } = req.query;
+  try {
+    if (!patientId) {
+      const response = {
+        status: "failed",
+        message: "please provide a patient as query parameter",
+      };
+      res.status(400).json(response);
+    } else {
+      const patient = await Patient.findOne({ patientId });
+      console.log(patient);
+      if (!patient.wallet) {
+        const response = {
+          status: "failed",
+          message: "please does not exist",
+        };
+        res.status(400).json(response);
+      } else {
+        fetchPatientInfoService(patient.wallet).then((response) => {
+          if (response.status != "success") {
+            console.log(response);
+            res.status(404).json(response);
+          }
+          res.status(200).json(response);
+        });
+      }
+    }
+  } catch (error) {
+    console.log(error);
     const response = {
       status: "failed",
-      message: "please provide a patient address",
+      message: "Internal Server Error",
     };
-
-    res.status(400).json(response);
-  } else {
-    fetchPatientInfoService(patientAddress).then((response) => {
-      if (response.status != "success") {
-        console.log(response);
-        res.status(404).json(response);
-      }
-      res.status(200).json(response);
-    });
+    res.status(500).json(response);
   }
 };
 
@@ -42,6 +61,6 @@ const fetchAllWalletAddressesController = async (req, res) => {
 };
 
 module.exports = {
-  commonViewPatientDetails,
+  fetchSinglePatientDetails,
   fetchAllWalletAddressesController,
 };

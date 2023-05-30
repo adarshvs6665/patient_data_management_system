@@ -13,14 +13,9 @@ router.post(
   hospitalController.hospitalCreatePatientController
 );
 
-router.post(
-  "/generate-patient-data",
-  hospitalController.hospitalGeneratePatientDataController
-);
-
 router.put(
-  "/update-patient-data",
-  hospitalController.hospitalUpdatePatientDataController
+  "/update-patient-report",
+  hospitalController.hospitalUpdatePatientMedicalReportController
 );
 
 router.put(
