@@ -11,15 +11,15 @@ hospital :
 	login                                               :api-end-point -> method :post       url :hospital/sign-in   
 	logout                                              :api-end-point -> method :get        url :hospital/sign-out    
 	view profile                                        :api-end-point -> method :get        url :hospital/view-profile    
- ✓	create patient                                      :api-end-point -> method :post       url :hospital/create-patient    
-	generate patient data                               :api-end-point -> method :post       url :hospital/generate-patient-data    
-	update patient data                                 :api-end-point -> method :put        url :hospital/update-patient-data    
+ ✓	create patient                                      :api-end-point -> method :post       url :hospital/create-patient  				body : name,email,password,address,gender,dob,state,phone,wallet,hospitalWalletAddress  
+ ✓	update patient data                                 :api-end-point -> method :put        url :hospital/update-patient-report          body : hospitalWalletAddress,patientId,hospitalId,patientData
 	share patient data to other hospitals               :api-end-point -> method :put        url :hospital/share-to-hospital    
 	share patient data to insurance companies           :api-end-point -> method :put        url :hospital/share-to-insurance    
 	view hospitals having access to data                :api-end-point -> method :get        url :hospital/view-auth-hospital-list    
 	view insurance companies having access to data      :api-end-point -> method :get        url :hospital/view-auth-insurance-list"    
 	generate policy claim                               :api-end-point -> method :get        url :hospital/generate-policy-claim    
 	view policy claim details                           :api-end-point -> method :get        url :hospital/view-policy-claim    
+ ✗	generate patient data                               :api-end-point -> method :post       url :hospital/generate-patient-data    
 	-- revoke access to data for insurance companies       :api-end-point -> method :        url :
 insurance :
 	login                                               :api-end-point -> method :post       url :insurance/sign-in
@@ -34,9 +34,9 @@ insurance :
 admin :
 	login                                               :api-end-point -> method :post       url :admin/sign-in
 	logout                                              :api-end-point -> method :get        url :admin/sign-out
- ✓	create hospital                                     :api-end-point -> method :post       url :admin/create-hospital 									Body : name,email,password,address,state,phone,wallet,adminWalletAddress
+ ✓	create hospital                                     :api-end-point -> method :post       url :admin/create-hospital 				body : name,email,password,address,state,phone,wallet,adminWalletAddress
 	delete hospital                                     :api-end-point -> method :delete     url :admin/delete-hospital 
- ✓	create insurance company                            :api-end-point -> method :post       url :admin/create-insurance-company 							Body : name,email,password,address,state,phone,wallet,adminWalletAddress
+ ✓	create insurance company                            :api-end-point -> method :post       url :admin/create-insurance-company 		body : name,email,password,address,state,phone,wallet,adminWalletAddress
 	delete insurance company                            :api-end-point -> method :delete     url :admin/delete-insurance-company
 	
 common :

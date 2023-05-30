@@ -229,7 +229,7 @@ const fetchAllInsuranceCompaniesService = async () => {
 };
 
 // update patient data ( newPatientData is stringified JSON)
-const updatePatientDataService = async (
+const updatePatientReportService = async (
   hospitalAddress,
   patientAddress,
   newPatientData
@@ -564,5 +564,5 @@ module.exports = {
   fetchPatientInfoService,
   fetchHospitalInfoService,
   fetchWalletAddressesService,
-  updatePatientDataService,
+  updatePatientReportService,
 };

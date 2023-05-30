@@ -4,7 +4,7 @@ const { v4: uuidv4 } = require("uuid");
 
 const {
   createPatientService,
-  updatePatientDataService,
+  updatePatientReportService,
 } = require("../services/blockchain/blockchainService");
 
 const hospitalSignInController = async (req, res) => {
@@ -111,12 +111,12 @@ const hospitalCreatePatientController = async (req, res) => {
 
 const hospitalUpdatePatientMedicalReportController = async (req, res) => {
   // destructering data from request body
-  const { hospitalWalletAddress, patientId, patientData, hospitalId } =
+  const { hospitalId, patientId, hospitalWalletAddress,  patientReport } =
     req.body;
   const patient = await Patient.findOne({ patientId });
 
   // handles when required data is not passed to the endpoint
-  if (!hospitalWalletAddress || !patientId || !hospitalId || !patientData) {
+  if (!hospitalWalletAddress || !patientId || !hospitalId || !patientReport) {
     const response = {
       status: "failed",
       message: "insufficient information",
@@ -135,14 +135,14 @@ const hospitalUpdatePatientMedicalReportController = async (req, res) => {
       response,
     });
   } else {
-    patientData.hospitalId = hospitalId;
-    patientData.reportId = uuidv4();
+    patientReport.hospitalId = hospitalId;
+    patientReport.reportId = uuidv4();
 
     const patientWalletAddress = patient.wallet;
-    updatePatientDataService(
+    updatePatientReportService(
       hospitalWalletAddress,
       patientWalletAddress,
-      patientData
+      patientReport
     )
       .then(async (response) => {
         if (response.status != "success") {
