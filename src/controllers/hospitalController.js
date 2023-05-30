@@ -23,7 +23,43 @@ const hospitalSignInController = async (req, res) => {
 
 const hospitalSignOutController = async (req, res) => {};
 
-const hospitalViewProfileController = async (req, res) => {};
+const hospitalViewProfileController = async (req, res) => {
+  const { hospitalId } = req.query;
+  const hospital = await Hospital.findOne({ hospitalId }).lean();
+
+  if (!hospitalId) {
+    const response = {
+      status: "failed",
+      message: "insufficient information",
+    };
+    res.status(400).json({
+      response,
+    });
+  }
+  // handles when hospital does not exist
+  else if (!hospital) {
+    const response = {
+      status: "failed",
+      message: "hospital does not exist",
+    };
+    res.status(404).json({
+      response,
+    });
+  } else {
+    // removing password from mongodb response
+    const { password: rmPass, ...hospitalData } = hospital;
+    const response = {
+      status: "success",
+      message: "fetched hospital information successfully",
+      data: {
+        ...hospitalData,
+      },
+    };
+    res.status(200).json({
+      response,
+    });
+  }
+};
 
 const hospitalCreatePatientController = async (req, res) => {
   // destructering data from request body
@@ -36,10 +72,11 @@ const hospitalCreatePatientController = async (req, res) => {
     address,
     state,
     phone,
+    hospitalId,
     wallet: patientWalletAddress,
-    hospitalWalletAddress,
   } = req.body;
 
+  const hospital = await Hospital.findOne({ hospitalId });
   // handles when required data is not passed to the endpoint
   if (
     !name ||
@@ -50,8 +87,8 @@ const hospitalCreatePatientController = async (req, res) => {
     !address ||
     !state ||
     !phone ||
-    !patientWalletAddress ||
-    !hospitalWalletAddress
+    !hospitalId ||
+    !patientWalletAddress
   ) {
     const response = {
       status: "failed",
@@ -60,8 +97,19 @@ const hospitalCreatePatientController = async (req, res) => {
     res.status(400).json({
       response,
     });
+  }
+  // handles when hospital does not exist
+  else if (!hospital) {
+    const response = {
+      status: "failed",
+      message: "hospital does not exist",
+    };
+    res.status(404).json({
+      response,
+    });
   } else {
     const patientId = uuidv4();
+    const hospitalWalletAddress = hospital.wallet;
     createPatientService(hospitalWalletAddress, patientWalletAddress, patientId)
       .then(async (response) => {
         if (response.status != "success") {
@@ -82,6 +130,8 @@ const hospitalCreatePatientController = async (req, res) => {
         });
         const result = await patient.save();
         const { transactionHash } = response.data;
+
+        // removing password from mongodb response
         const { password: rmPass, ...patientData } = result._doc;
         const responseObj = {
           status: "success",
@@ -111,12 +161,11 @@ const hospitalCreatePatientController = async (req, res) => {
 
 const hospitalUpdatePatientMedicalReportController = async (req, res) => {
   // destructering data from request body
-  const { hospitalId, patientId, hospitalWalletAddress,  patientReport } =
-    req.body;
+  const { hospitalId, patientId, patientReport } = req.body;
   const patient = await Patient.findOne({ patientId });
-
+  const hospital = await Hospital.findOne({ hospitalId });
   // handles when required data is not passed to the endpoint
-  if (!hospitalWalletAddress || !patientId || !hospitalId || !patientReport) {
+  if (!patientId || !hospitalId || !patientReport) {
     const response = {
       status: "failed",
       message: "insufficient information",
@@ -134,11 +183,22 @@ const hospitalUpdatePatientMedicalReportController = async (req, res) => {
     res.status(404).json({
       response,
     });
+  }
+  // handles when hospital does not exist
+  else if (!hospital) {
+    const response = {
+      status: "failed",
+      message: "hospital does not exist",
+    };
+    res.status(404).json({
+      response,
+    });
   } else {
+    const hospitalWalletAddress = hospital.wallet;
+    const patientWalletAddress = patient.wallet;
     patientReport.hospitalId = hospitalId;
     patientReport.reportId = uuidv4();
 
-    const patientWalletAddress = patient.wallet;
     updatePatientReportService(
       hospitalWalletAddress,
       patientWalletAddress,
