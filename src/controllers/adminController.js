@@ -76,13 +76,13 @@ const adminCreateHospitalController = async (req, res) => {
                 });
                 const result = await hospital.save();
                 const { transactionHash } = response.data;
-                const hospitalData = result._doc
+                const { password: rmPass, ...hospitalData } = result._doc;
                 const responseObj = {
                     status: "success",
                     message: "created hospital successfully",
                     data: {
                         transactionHash,
-                        ...hospitalData
+                        ...hospitalData,
                     },
                 };
                 res.status(200).json(responseObj);
