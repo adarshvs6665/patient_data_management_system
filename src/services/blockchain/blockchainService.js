@@ -375,21 +375,19 @@ const addAuthorizedHospitalService = async (
   hospitalAddressToBeAuthorized
 ) => {
   try {
-      const transaction = contract.methods.addAuthorizedHospital(
-        patientAddress,
-        hospitalAddressToBeAuthorized
-      );
-      const gas = await transaction.estimateGas({ from: hospitalAddress });
-      const result = await transaction.send({ from: hospitalAddress, gas });
-  
-      
+    const transaction = contract.methods.addAuthorizedHospital(
+      patientAddress,
+      hospitalAddressToBeAuthorized
+    );
+    const gas = await transaction.estimateGas({ from: hospitalAddress });
+    const result = await transaction.send({ from: hospitalAddress, gas });
 
     const response = {
       status: "success",
       message: "authorized hospital successfully",
       data: {
         transactionHash: result.transactionHash,
-      }
+      },
     };
     return response;
   } catch (error) {

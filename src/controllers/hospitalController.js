@@ -5,7 +5,7 @@ const { v4: uuidv4 } = require("uuid");
 const {
   createPatientService,
   updatePatientReportService,
-  addAuthorizedHospitalService
+  addAuthorizedHospitalService,
 } = require("../services/blockchain/blockchainService");
 
 const hospitalSignInController = async (req, res) => {
@@ -234,7 +234,10 @@ const authorizeHospitalController = async (req, res) => {
   const { hospitalId, patientId, hospitalToBeAuthorizedId } = req.body;
   const patient = await Patient.findOne({ patientId });
   const hospital = await Hospital.findOne({ hospitalId });
-  const hospitalToBeAuthorized = await Hospital.findOne({ hospitalToBeAuthorizedId });
+  const hospitalToBeAuthorized = await Hospital.findOne({
+    hospitalId: hospitalToBeAuthorizedId,
+  });
+
   // handles when required data is not passed to the endpoint
   if (!patientId || !hospitalId || !hospitalToBeAuthorizedId) {
     const response = {
@@ -264,7 +267,7 @@ const authorizeHospitalController = async (req, res) => {
     res.status(404).json({
       response,
     });
-  } 
+  }
   // handles when hospital to be authorized does not exist
   else if (!hospitalToBeAuthorized) {
     const response = {
@@ -274,19 +277,19 @@ const authorizeHospitalController = async (req, res) => {
     res.status(404).json({
       response,
     });
-  }
-  else {
+  } else {
+    // setting wallet addresses fetched from mongodb
     const patientWalletAddress = patient.wallet;
     const hospitalWalletAddress = hospital.wallet;
     const hospitalAddressToBeAuthorized = hospitalToBeAuthorized.wallet;
-    
 
+    // authorizing hospital
     addAuthorizedHospitalService(
       hospitalWalletAddress,
       patientWalletAddress,
       hospitalAddressToBeAuthorized
     )
-      .then(async (response) => {
+      .then((response) => {
         if (response.status != "success") {
           console.log(response);
           res.status(404).json(response);
