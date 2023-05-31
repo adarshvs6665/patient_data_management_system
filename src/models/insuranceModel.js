@@ -18,7 +18,7 @@ const InsuranceSchema = new Schema(
       required: true,
       minlength: [8, "Password should contain atleast 8 characters"],
     },
-    dateOfInagration: {
+    dateOfInaugration: {
       type: Date,
       required: true,
     },
