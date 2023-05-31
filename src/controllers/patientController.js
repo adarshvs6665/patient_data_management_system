@@ -1,4 +1,3 @@
-const patientSignInController = async (req, res) => {};
 const Patient = require("../models/patientModel")
 
 const patientSignOutController = async (req, res) => {};
@@ -26,34 +25,9 @@ const patientViewHospitalAccessController = async (req, res) => {};
 
 const patientViewInsuranceAccessController = async (req, res) => {};
 
-module.exports = {
-  patientSignInController,
-  patientSignOutController,
-  patientViewProfileController,
-  patientViewReportController,
-  patientShareReportController,
-  patientViewHospitalAccessController,
-  patientViewInsuranceAccessController,
-};
-
-}
-
-const patientShareReportController = async(req,res)=>{
-
-}
-
 const patientViewpatientAccessController = async(req,res)=>{
 
 }
-
-const patientViewInsuranceAccessController = async(req,res)=>{
-
-}
-
-const patientViewHospitalAccessController = async(req,res)=>{
-
-}
-
 
 
 
