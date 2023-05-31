@@ -19,8 +19,9 @@ hospital :
 	view insurance companies having access to data      :api-end-point -> method :get        url :hospital/view-auth-insurance-list"    
 	generate policy claim                               :api-end-point -> method :get        url :hospital/generate-policy-claim    
 	view policy claim details                           :api-end-point -> method :get        url :hospital/view-policy-claim    
+	
  ✗	generate patient data                               :api-end-point -> method :post       url :hospital/generate-patient-data    
-	-- revoke access to data for insurance companies       :api-end-point -> method :        url :
+	-- revoke access to data for insurance companies    :api-end-point -> method :           url :
 insurance :
 	login                                               :api-end-point -> method :post       url :insurance/sign-in
 	logout                                              :api-end-point -> method :get        url :insurance/sign-out
