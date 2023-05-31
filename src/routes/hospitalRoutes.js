@@ -24,8 +24,8 @@ router.put(
 );
 
 router.put(
-  "/share-to-insurance",
-  hospitalController.hospitalShareToInsuranceController
+  "/authorize-insurance-company",
+  hospitalController.authorizeInsuranceCompanyController
 );
 
 router.get(

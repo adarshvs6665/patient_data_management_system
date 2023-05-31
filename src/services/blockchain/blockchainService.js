@@ -344,15 +344,19 @@ const addAuthorizedInsuranceCompanyService = async (
   insuranceAddress
 ) => {
   try {
-    await contract.methods
-      .addAuthorizedInsuranceCompany(patientAddress, insuranceAddress)
-      .send({
-        from: hospitalAddress,
-      });
-    // console.log('Insurance company added successfully.');
+    const transaction = contract.methods.addAuthorizedInsuranceCompany(
+      patientAddress,
+      insuranceAddress
+    );
+    const gas = await transaction.estimateGas({ from: hospitalAddress });
+    const result = await transaction.send({ from: hospitalAddress, gas });
+
     const response = {
       status: "success",
       message: "authorized insurance company successfully",
+      data: {
+        transactionHash: result.transactionHash,
+      },
     };
     return response;
   } catch (error) {

@@ -6,7 +6,9 @@ const {
   createPatientService,
   updatePatientReportService,
   addAuthorizedHospitalService,
+  addAuthorizedInsuranceCompanyService,
 } = require("../services/blockchain/blockchainService");
+const Insurance = require("../models/insuranceModel");
 
 const hospitalSignInController = async (req, res) => {
   const { email, password } = req.body;
@@ -313,7 +315,90 @@ const authorizeHospitalController = async (req, res) => {
   }
 };
 
-const hospitalShareToInsuranceController = async (req, res) => {};
+const authorizeInsuranceCompanyController = async (req, res) => {
+  // destructering data from request body
+  const { hospitalId, patientId, insuranceCompanyToBeAuthorizedId } = req.body;
+  const patient = await Patient.findOne({ patientId });
+  const hospital = await Hospital.findOne({ hospitalId });
+  const insuranceCompanyToBeAuthorized = await Insurance.findOne({
+    insuranceCompanyId: insuranceCompanyToBeAuthorizedId,
+  });
+
+  // handles when required data is not passed to the endpoint
+  if (!patientId || !hospitalId || !insuranceCompanyToBeAuthorizedId) {
+    const response = {
+      status: "failed",
+      message: "insufficient information",
+    };
+    res.status(400).json({
+      response,
+    });
+  }
+  // handles when patient does not exist
+  else if (!patient) {
+    const response = {
+      status: "failed",
+      message: "patient does not exist",
+    };
+    res.status(404).json({
+      response,
+    });
+  }
+  // handles when hospital does not exist
+  else if (!hospital) {
+    const response = {
+      status: "failed",
+      message: "hospital does not exist",
+    };
+    res.status(404).json({
+      response,
+    });
+  }
+  // handles when insurance company to be authorized does not exist
+  else if (!insuranceCompanyToBeAuthorized) {
+    const response = {
+      status: "failed",
+      message: "cannot authorize insurance company which does not exist",
+    };
+    res.status(404).json({
+      response,
+    });
+  } else {
+    // setting wallet addresses fetched from mongodb
+    const patientWalletAddress = patient.wallet;
+    const hospitalWalletAddress = hospital.wallet;
+    const insuranceCompanyAddressToBeAuthorized =
+      insuranceCompanyToBeAuthorized.wallet;
+
+    // authorizing hospital
+    addAuthorizedInsuranceCompanyService(
+      hospitalWalletAddress,
+      patientWalletAddress,
+      insuranceCompanyAddressToBeAuthorized
+    )
+      .then((response) => {
+        if (response.status != "success") {
+          console.log(response);
+          res.status(404).json(response);
+        } else {
+          res.status(200).json(response);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        const response = {
+          status: "failed",
+          message: "Internal error",
+          data: {
+            error: err.message,
+          },
+        };
+        res.status(500).json({
+          response,
+        });
+      });
+  }
+};
 
 const hospitalViewHospitalController = async (req, res) => {};
 
@@ -330,7 +415,7 @@ module.exports = {
   hospitalCreatePatientController,
   hospitalUpdatePatientMedicalReportController,
   authorizeHospitalController,
-  hospitalShareToInsuranceController,
+  authorizeInsuranceCompanyController,
   hospitalViewHospitalController,
   hospitalViewInsuranceController,
   hospitalGeneratePolicyClaimController,
