@@ -20,7 +20,7 @@ router.put(
 
 router.put(
   "/share-to-hospital",
-  hospitalController.hospitalShareToHospitalController
+  hospitalController.authorizeHospitalController
 );
 
 router.put(

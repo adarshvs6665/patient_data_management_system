@@ -5,6 +5,7 @@ const { v4: uuidv4 } = require("uuid");
 const {
   createPatientService,
   updatePatientReportService,
+  addAuthorizedHospitalService
 } = require("../services/blockchain/blockchainService");
 
 const hospitalSignInController = async (req, res) => {
@@ -228,7 +229,86 @@ const hospitalUpdatePatientMedicalReportController = async (req, res) => {
   }
 };
 
-const hospitalShareToHospitalController = async (req, res) => {};
+const authorizeHospitalController = async (req, res) => {
+  // destructering data from request body
+  const { hospitalId, patientId, hospitalToBeAuthorizedId } = req.body;
+  const patient = await Patient.findOne({ patientId });
+  const hospital = await Hospital.findOne({ hospitalId });
+  const hospitalToBeAuthorized = await Hospital.findOne({ hospitalToBeAuthorizedId });
+  // handles when required data is not passed to the endpoint
+  if (!patientId || !hospitalId || !hospitalToBeAuthorizedId) {
+    const response = {
+      status: "failed",
+      message: "insufficient information",
+    };
+    res.status(400).json({
+      response,
+    });
+  }
+  // handles when patient does not exist
+  else if (!patient) {
+    const response = {
+      status: "failed",
+      message: "patient does not exist",
+    };
+    res.status(404).json({
+      response,
+    });
+  }
+  // handles when hospital does not exist
+  else if (!hospital) {
+    const response = {
+      status: "failed",
+      message: "hospital does not exist",
+    };
+    res.status(404).json({
+      response,
+    });
+  } 
+  // handles when hospital to be authorized does not exist
+  else if (!hospitalToBeAuthorized) {
+    const response = {
+      status: "failed",
+      message: "cannot authorize hospital which does not exist",
+    };
+    res.status(404).json({
+      response,
+    });
+  }
+  else {
+    const patientWalletAddress = patient.wallet;
+    const hospitalWalletAddress = hospital.wallet;
+    const hospitalAddressToBeAuthorized = hospitalToBeAuthorized.wallet;
+    
+
+    addAuthorizedHospitalService(
+      hospitalWalletAddress,
+      patientWalletAddress,
+      hospitalAddressToBeAuthorized
+    )
+      .then(async (response) => {
+        if (response.status != "success") {
+          console.log(response);
+          res.status(404).json(response);
+        } else {
+          res.status(200).json(response);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        const response = {
+          status: "failed",
+          message: "Internal error",
+          data: {
+            error: err.message,
+          },
+        };
+        res.status(500).json({
+          response,
+        });
+      });
+  }
+};
 
 const hospitalShareToInsuranceController = async (req, res) => {};
 
@@ -246,7 +326,7 @@ module.exports = {
   hospitalViewProfileController,
   hospitalCreatePatientController,
   hospitalUpdatePatientMedicalReportController,
-  hospitalShareToHospitalController,
+  authorizeHospitalController,
   hospitalShareToInsuranceController,
   hospitalViewHospitalController,
   hospitalViewInsuranceController,

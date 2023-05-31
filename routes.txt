@@ -1,6 +1,5 @@
 patient :
-	login                                               :api-end-point -> method :post       url :patient/sign-in  
-	logout                                              :api-end-point -> method :get        url :patient/sign-out  
+	login                                               :api-end-point -> method :post       url :patient/sign-in   
 	view profile                                        :api-end-point -> method :get        url :patient/view-profile  
 	view report                                         :api-end-point -> method :get        url :patient/view-report  
 	share report                                        :api-end-point -> method :put        url :patient/share-report  
@@ -9,11 +8,10 @@ patient :
 	
 hospital :
 	login                                               :api-end-point -> method :post       url :hospital/sign-in   
-	logout                                              :api-end-point -> method :get        url :hospital/sign-out    
  ✓	view profile                                        :api-end-point -> method :get        url :hospital/view-profile    				query	: hospitalId
  ✓	create patient                                      :api-end-point -> method :post       url :hospital/create-patient  				body 	: name, email, password, address, gender, dob, state, phone, wallet, hospitalId  
  ✓	update patient data                                 :api-end-point -> method :put        url :hospital/update-patient-report        body 	: hospitalId, patientId, patientReport
-	share patient data to other hospitals               :api-end-point -> method :put        url :hospital/share-to-hospital    
+							share patient data to other hospitals               :api-end-point -> method :put        url :hospital/share-to-hospital    
 	share patient data to insurance companies           :api-end-point -> method :put        url :hospital/share-to-insurance    
 	view hospitals having access to data                :api-end-point -> method :get        url :hospital/view-auth-hospital-list    
 	view insurance companies having access to data      :api-end-point -> method :get        url :hospital/view-auth-insurance-list"    
@@ -24,7 +22,6 @@ hospital :
 	-- revoke access to data for insurance companies    :api-end-point -> method :           url :
 insurance :
 	login                                               :api-end-point -> method :post       url :insurance/sign-in
-	logout                                              :api-end-point -> method :get        url :insurance/sign-out
 	view profile details                                :api-end-point -> method :get        url :insurance/view-profile-details
 	view policy claims                                  :api-end-point -> method :get        url :insurance/view-policy-claims
 	view data attached to policy claims                 :api-end-point -> method :get        url :insurance/view-data-attached-to-policy-claims
@@ -34,7 +31,6 @@ insurance :
 	
 admin :
 	login                                               :api-end-point -> method :post       url :admin/sign-in
-	logout                                              :api-end-point -> method :get        url :admin/sign-out
  ✓	create hospital                                     :api-end-point -> method :post       url :admin/create-hospital 				body : name, email, password, address, state, phone, wallet, adminWalletAddress
 	delete hospital                                     :api-end-point -> method :delete     url :admin/delete-hospital 
  ✓	create insurance company                            :api-end-point -> method :post       url :admin/create-insurance-company 		body : name, email, password, address, state, phone, wallet, adminWalletAddress
@@ -42,4 +38,4 @@ admin :
 	
 common :
 	view patient details of a single patient            :api-end-point -> method :get        url :common/view-patient-details
-	fetch wallet addressess 							:api-end-point -> method :get 		 url :common/fetch-wallet-addresses
+ ✓	fetch wallet addressess 							:api-end-point -> method :get 		 url :common/fetch-wallet-addresses
