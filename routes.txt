@@ -11,8 +11,8 @@ hospital :
  ✓	view profile                                        :api-end-point -> method :get        url :hospital/view-profile    				query	: hospitalId
  ✓	create patient                                      :api-end-point -> method :post       url :hospital/create-patient  				body 	: name, email, password, address, gender, dob, state, phone, wallet, hospitalId  
  ✓	update patient data                                 :api-end-point -> method :put        url :hospital/update-patient-report        body 	: hospitalId, patientId, patientReport
-							share patient data to other hospitals               :api-end-point -> method :put        url :hospital/share-to-hospital    
-	share patient data to insurance companies           :api-end-point -> method :put        url :hospital/share-to-insurance    
+ ✓	share patient data to other hospitals               :api-end-point -> method :put        url :hospital/share-to-hospital            body 	: hospitalId, patientId, hospitalToBeAuthorizedId
+ ✓	share patient data to insurance companies           :api-end-point -> method :put        url :hospital/share-to-insurance    
 	view hospitals having access to data                :api-end-point -> method :get        url :hospital/view-auth-hospital-list    
 	view insurance companies having access to data      :api-end-point -> method :get        url :hospital/view-auth-insurance-list"    
 	generate policy claim                               :api-end-point -> method :get        url :hospital/generate-policy-claim    
