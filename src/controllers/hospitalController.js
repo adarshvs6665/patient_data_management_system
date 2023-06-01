@@ -7,7 +7,7 @@ const {
   updatePatientReportService,
   addAuthorizedHospitalService,
   addAuthorizedInsuranceCompanyService,
-  fetchAuthorizedHospitalsService
+  fetchAuthorizedHospitalsService,
 } = require("../services/blockchain/blockchainService");
 const Insurance = require("../models/insuranceModel");
 
@@ -16,7 +16,14 @@ const hospitalSignInController = async (req, res) => {
   const hospital = await Hospital.findOne({ email });
   if (hospital) {
     if (password === hospital.password) {
-      res.json({ message: "Login Sucess" });
+      res
+        .status(200)
+        .json({
+          status: "success",
+          message: "Login Sucess",
+          role: "hospital",
+          id: hospital.hospitalId,
+        });
     } else {
       res.json({ message: "Invalid Password" });
     }
