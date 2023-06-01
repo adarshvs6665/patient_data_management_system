@@ -5,7 +5,14 @@ const insuranceSignInController = async (req, res) => {
   const insurance = await Insurance.findOne({ email });
   if (insurance) {
     if (password === insurance.password) {
-      res.json({ message: "Login Sucess" });
+      res
+      .status(200)
+      .json({
+        status: "success",
+        message: "Login Sucess",
+        role: "insurance",
+        id: insurance.insuranceCompanyId,
+      });
     } else {
       res.json({ message: "Invalid Password" });
     }
