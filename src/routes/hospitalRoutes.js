@@ -29,13 +29,13 @@ router.put(
 );
 
 router.get(
-  "/view-auth-hospital-list",
-  hospitalController.hospitalViewHospitalController
+  "/fetch-authorized-hospitals",
+  hospitalController.fetchAuthorizedHospitalsController
 );
 
 router.get(
   "/view-auth-insurance-list",
-  hospitalController.hospitalViewInsuranceController
+  hospitalController.fetchAuthorizedInsurancesController
 );
 
 router.get(
