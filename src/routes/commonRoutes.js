@@ -1,11 +1,17 @@
 const express = require("express");
 const router = express.Router();
-const commonControllers = require("../controllers/commonController");
+const commonController = require("../controllers/commonController");
 
-router.get("/view-patient-details", commonControllers.fetchSinglePatientDetails);
+router.get("/view-patient-details", commonController.fetchSinglePatientDetails);
 router.get(
   "/fetch-wallet-addresses",
-  commonControllers.fetchAllWalletAddressesController
+  commonController.fetchAllWalletAddressesController
 );
+
+router.get(
+  "/fetch-authorized-hospitals",
+  commonController.fetchAuthorizedHospitalsController
+);
+
 
 module.exports = router;

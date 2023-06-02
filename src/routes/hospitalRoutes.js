@@ -29,11 +29,6 @@ router.put(
 );
 
 router.get(
-  "/fetch-authorized-hospitals",
-  hospitalController.fetchAuthorizedHospitalsController
-);
-
-router.get(
   "/view-auth-insurance-list",
   hospitalController.fetchAuthorizedInsurancesController
 );

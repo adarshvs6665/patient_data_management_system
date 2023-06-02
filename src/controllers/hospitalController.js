@@ -408,63 +408,6 @@ const authorizeInsuranceCompanyController = async (req, res) => {
   }
 };
 
-const fetchAuthorizedHospitalsController = async (req, res) => {
-  // destructering data from request body
-  const { patientId } = req.body;
-  const patient = await Patient.findOne({ patientId });
-
-  // handles when required data is not passed to the endpoint
-  if (!patientId) {
-    const response = {
-      status: "failed",
-      message: "insufficient information",
-    };
-    res.status(400).json({
-      response,
-    });
-  }
-  // handles when patient does not exist
-  else if (!patient) {
-    const response = {
-      status: "failed",
-      message: "patient does not exist",
-    };
-    res.status(404).json({
-      response,
-    });
-  } else {
-    // setting wallet addresses fetched from mongodb
-    const patientWalletAddress = patient.wallet;
-
-    // authorizing hospital
-    addAuthorizedInsuranceCompanyService(
-      hospitalWalletAddress,
-      patientWalletAddress,
-      insuranceCompanyAddressToBeAuthorized
-    )
-      .then((response) => {
-        if (response.status != "success") {
-          console.log(response);
-          res.status(404).json(response);
-        } else {
-          res.status(200).json(response);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-        const response = {
-          status: "failed",
-          message: "Internal error",
-          data: {
-            error: err.message,
-          },
-        };
-        res.status(500).json({
-          response,
-        });
-      });
-  }
-};
 
 const fetchAuthorizedInsurancesController = async (req, res) => {};
 
@@ -480,7 +423,6 @@ module.exports = {
   hospitalUpdatePatientMedicalReportController,
   authorizeHospitalController,
   authorizeInsuranceCompanyController,
-  fetchAuthorizedHospitalsController,
   fetchAuthorizedInsurancesController,
   hospitalGeneratePolicyClaimController,
   hospitalViewPolicyClaimController,
