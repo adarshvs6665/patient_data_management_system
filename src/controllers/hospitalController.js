@@ -32,7 +32,7 @@ const hospitalSignInController = async (req, res) => {
 
 const hospitalSignOutController = async (req, res) => {};
 
-const hospitalViewProfileController = async (req, res) => {
+const fetchHospitalProfileController = async (req, res) => {
   const { hospitalId } = req.query;
   const hospital = await Hospital.findOne({ hospitalId }).lean();
 
@@ -424,7 +424,7 @@ const hospitalViewPolicyClaimController = async (req, res) => {};
 module.exports = {
   hospitalSignInController,
   hospitalSignOutController,
-  hospitalViewProfileController,
+  fetchHospitalProfileController,
   hospitalCreatePatientController,
   hospitalUpdatePatientMedicalReportController,
   authorizeHospitalController,

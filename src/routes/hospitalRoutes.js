@@ -6,7 +6,7 @@ router.post("/sign-in", hospitalController.hospitalSignInController);
 
 router.get("/sign-out", hospitalController.hospitalSignOutController);
 
-router.get("/view-profile", hospitalController.hospitalViewProfileController);
+router.get("/fetch-profile", hospitalController.fetchHospitalProfileController);
 
 router.post(
   "/create-patient",

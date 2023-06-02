@@ -7,8 +7,8 @@ router.post("/sign-in", insuranceController.insuranceSignInController);
 router.get("/sign-out", insuranceController.insuranceSignOutController);
 
 router.get(
-  "/view-profile-details",
-  insuranceController.insuranceViewProfileController
+  "/fetch-profile",
+  insuranceController.fetchInsuranceCompanyProfileController
 );
 
 router.get(

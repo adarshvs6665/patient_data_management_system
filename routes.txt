@@ -8,7 +8,7 @@ patient :
 	
 hospital :
 	login                                               :api-end-point -> method :post       url :hospital/sign-in   
- ✓	view profile                                        :api-end-point -> method :get        url :hospital/view-profile    				query	: hospitalId
+ ✓	fetch profile                                        :api-end-point -> method :get       url :hospital/fetch-profile    			query	: hospitalId
  ✓	create patient                                      :api-end-point -> method :post       url :hospital/create-patient  				body 	: name, email, password, address, gender, dob, state, phone, wallet, hospitalId  
  ✓	update patient data                                 :api-end-point -> method :put        url :hospital/update-patient-report        body 	: hospitalId, patientId, patientReport
  ✓	share patient data to other hospitals               :api-end-point -> method :put        url :hospital/authorize-hospital           body 	: hospitalId, patientId, hospitalToBeAuthorizedId
@@ -20,13 +20,13 @@ hospital :
 	-- revoke access to data for insurance companies    :api-end-point -> method :           url :
 insurance :
 	login                                               :api-end-point -> method :post       url :insurance/sign-in
-	view profile details                                :api-end-point -> method :get        url :insurance/view-profile-details
-	view policy claims                                  :api-end-point -> method :get        url :insurance/view-policy-claims
-	view data attached to policy claims                 :api-end-point -> method :get        url :insurance/view-data-attached-to-policy-claims
-	accept claim                                        :api-end-point -> method :post       url :insurance/accept-claim
-	reject claim                                        :api-end-point -> method :post       url :insurance/reject-claim
-	view policy history                                 :api-end-point -> method :get        url :insurance/view-policy-history
+ ✓	fetch profile 		                                :api-end-point -> method :get        url :insurance/fetch-profile				query	: insuranceCompanyId
 	
+ ✗	view policy claims                                  :api-end-point -> method :get        url :insurance/view-policy-claims
+ ✗	view data attached to policy claims                 :api-end-point -> method :get        url :insurance/view-data-attached-to-policy-claims
+ ✗	accept claim                                        :api-end-point -> method :post       url :insurance/accept-claim
+ ✗	reject claim                                        :api-end-point -> method :post       url :insurance/reject-claim
+ ✗	view policy history                                 :api-end-point -> method :get        url :insurance/view-policy-history
 admin :
 	login                                               :api-end-point -> method :post       url :admin/sign-in
  ✓	create hospital                                     :api-end-point -> method :post       url :admin/create-hospital 				body : name, email, password, address, state, phone, wallet, adminWalletAddress

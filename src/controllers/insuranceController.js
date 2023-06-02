@@ -5,9 +5,7 @@ const insuranceSignInController = async (req, res) => {
   const insurance = await Insurance.findOne({ email });
   if (insurance) {
     if (password === insurance.password) {
-      res
-      .status(200)
-      .json({
+      res.status(200).json({
         status: "success",
         message: "Login Sucess",
         role: "insurance",
@@ -23,7 +21,43 @@ const insuranceSignInController = async (req, res) => {
 
 const insuranceSignOutController = async (req, res) => {};
 
-const insuranceViewProfileController = async (req, res) => {};
+const fetchInsuranceCompanyProfileController = async (req, res) => {
+  const { insuranceCompanyId } = req.query;
+  const insuranceCompany = await Insurance.findOne({ insuranceCompanyId }).lean();
+
+  if (!insuranceCompanyId) {
+    const response = {
+      status: "failed",
+      message: "insufficient information",
+    };
+    res.status(400).json({
+      response,
+    });
+  }
+  // handles when hospital does not exist
+  else if (!insuranceCompany) {
+    const response = {
+      status: "failed",
+      message: "insurance company does not exist",
+    };
+    res.status(404).json({
+      response,
+    });
+  } else {
+    // removing password from mongodb response
+    const { password: rmPass, ...insuranceCompanyData } = insuranceCompany;
+    const response = {
+      status: "success",
+      message: "fetched insurance company information successfully",
+      data: {
+        ...insuranceCompanyData,
+      },
+    };
+    res.status(200).json({
+      response,
+    });
+  }
+};
 
 const insuranceViewPolicyClaimsController = async (req, res) => {};
 
@@ -42,7 +76,7 @@ module.exports = {
   insuranceRejectController,
   insuranceViewPolicyController,
   insuranceAcceptController,
-  insuranceViewProfileController,
+  fetchInsuranceCompanyProfileController,
   insuranceSignInController,
   insuranceSignOutController,
   insuranceViewPolicyClaimsController,
