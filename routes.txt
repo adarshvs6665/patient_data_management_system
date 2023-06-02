@@ -33,6 +33,8 @@ admin :
  ✓	login                                               :api-end-point -> method :post       url :admin/sign-in							body 	: email, password
  ✓	create hospital                                     :api-end-point -> method :post       url :admin/create-hospital 				body : name, email, password, address, state, phone, wallet, adminWalletAddress
  ✓	create insurance company                            :api-end-point -> method :post       url :admin/create-insurance-company 		body : name, email, password, address, state, phone, wallet, adminWalletAddress
+	fetch all hospitals 
+	fetch all insurance companies 
 	
  -	delete hospital                                     :api-end-point -> method :delete     url :admin/delete-hospital 
  -	delete insurance company                            :api-end-point -> method :delete     url :admin/delete-insurance-company
@@ -43,3 +45,4 @@ common :
  ✓	fetch authorized hospitals                          :api-end-point -> method :get        url :common/fetch-authorized-hospitals  	query	: patientId
  ✓	fetch authorized insurances                         :api-end-point -> method :get        url :common/fetch-authorized-insurances    query   : patientId
  ✓	fetch patient reports			          			:api-end-point -> method :get        url :common/fetch-patient-reports			query	: patientId
+ ✓	fetch unused wallet addresses			          	:api-end-point -> method :get        url :common/fetch-unused-addresses		
