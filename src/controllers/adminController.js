@@ -97,7 +97,7 @@ const adminCreateHospitalController = async (req, res) => {
           wallet: hospitalWalletAddress,
         });
 
-        const usedAddress = new UsedAddress({address: hospitalWalletAddress})
+        const usedAddress = new UsedAddress({ address: hospitalWalletAddress });
         await usedAddress.save();
         const result = await hospital.save();
         const { transactionHash } = response.data;
@@ -212,7 +212,9 @@ const adminCreateInsuranceController = async (req, res) => {
           wallet: insuranceWalletAddress,
         });
 
-        const usedAddress = new UsedAddress({address: insuranceWalletAddress})
+        const usedAddress = new UsedAddress({
+          address: insuranceWalletAddress,
+        });
         await usedAddress.save();
 
         const result = await insuranceCompany.save();
@@ -257,6 +259,26 @@ const adminDeleteInsuranceController = async (req, res) => {
   }
 };
 
+const adminFetchAllHospitalController = async (req, res) => {
+  try {
+    const allHospitalsData = await Hospital.find().lean();
+    res.json({ status: "success", message: "Hospitals Data Fetched sucessfully", data:allHospitalsData });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ status: "success", message: "Internal Server Error" });
+  }
+};
+
+const adminFetchAllInsuranceController = async (req, res) => {
+  try {
+    const allInsuranceData = await Hospital.find().lean();
+    res.json({ status: "success", message: "Insurance Data Fetched sucessfully", data:allInsuranceData });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ status: "success", message: "Internal Server Error" });
+  }
+};
+
 module.exports = {
   adminSignInController,
   adminSignOutController,
@@ -264,4 +286,6 @@ module.exports = {
   adminDeleteHospitalController,
   adminCreateInsuranceController,
   adminDeleteInsuranceController,
+  adminFetchAllHospitalController,
+  adminFetchAllInsuranceController,
 };

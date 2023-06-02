@@ -23,4 +23,8 @@ router.delete(
   adminControllers.adminDeleteInsuranceController
 );
 
+router.get("/all-hospitals",adminControllers.adminFetchAllHospitalController);
+
+router.get("/all-insurances",adminControllers.adminFetchAllInsuranceController);
+
 module.exports = router;
