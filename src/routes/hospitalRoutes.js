@@ -38,4 +38,14 @@ router.get(
   hospitalController.hospitalViewPolicyClaimController
 );
 
+router.get(
+  "/fetch-unauthorized-hospitals",
+  hospitalController.fetchUnAuthorizedHospitalsController
+);
+
+router.get(
+  "/fetch-unauthorized-insurances",
+  hospitalController.fetchUnAuthorizedInsurancesController
+);
+
 module.exports = router;

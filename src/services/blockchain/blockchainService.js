@@ -275,12 +275,19 @@ const updatePatientReportService = async (
 };
 
 // fetch authorized hospitals for a patient
-const fetchAuthorizedHospitalsService = async (patientAddress) => {
+const fetchAuthorizedHospitalsService = async (
+  patientAddress,
+  senderWalletAddress
+) => {
   try {
     // Call the getAuthorizedHospitals function in the contract
-    const authorizedHospitals = await contract.methods
-      .getAuthorizedHospitals(patientAddress)
-      .call();
+    const transaction = contract.methods.getAuthorizedHospitals(patientAddress);
+    const gas = await transaction.estimateGas({ from: senderWalletAddress });
+
+    const authorizedHospitals = await transaction.call({
+      from: senderWalletAddress,
+      gas: gas,
+    });
 
     // console.log("Authorized hospitals:", authorizedHospitals);
     const response = {
@@ -305,17 +312,21 @@ const fetchAuthorizedHospitalsService = async (patientAddress) => {
 };
 
 // fetch authorized insurance companies for a patient
-const fetchAuthorizedInsuranceCompaniesService = async (patientAddress) => {
+const fetchAuthorizedInsuranceCompaniesService = async (
+  patientAddress,
+  senderWalletAddress
+) => {
   try {
+    console.log(senderWalletAddress);
     // Call the getAuthorizedInsuranceCompanies function in the contract
-    const authorizedInsuranceCompanies = await contract.methods
-      .getAuthorizedInsuranceCompanies(patientAddress)
-      .call();
+    const transaction =
+      contract.methods.getAuthorizedInsuranceCompanies(patientAddress);
+    const gas = await transaction.estimateGas({ from: senderWalletAddress });
 
-    // console.log(
-    //     "Authorized insurance companies:",
-    //     authorizedInsuranceCompanies
-    // );
+    const authorizedInsuranceCompanies = await transaction.call({
+      from: senderWalletAddress,
+      gas: gas,
+    });
     const response = {
       status: "success",
       message: "fetched authorized insurance companies successfully",
@@ -467,11 +478,16 @@ const fetchMedicalRecordsContractService = async () => {
 };
 
 // fetch information about single patient
-const fetchPatientInfoService = async (patientAddress) => {
+const fetchPatientInfoService = async (patientAddress, senderWalletAddress) => {
   try {
-    const patientInfo = await contract.methods
-      .getPatientInfo(patientAddress)
-      .call();
+    const transaction = contract.methods.getPatientInfo(patientAddress);
+    const gas = await transaction.estimateGas({ from: senderWalletAddress });
+
+    const patientInfo = await transaction.call({
+      from: senderWalletAddress,
+      gas: gas,
+    });
+
     const response = {
       status: "success",
       message: "fetched patient information successfully",
@@ -482,6 +498,7 @@ const fetchPatientInfoService = async (patientAddress) => {
 
     return response;
   } catch (error) {
+    console.log(error);
     const response = {
       status: "failed",
       message: "error while fetching patient information",

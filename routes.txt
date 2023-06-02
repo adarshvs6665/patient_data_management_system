@@ -9,12 +9,16 @@ patient :
 	
 hospital :
  ✓	login                                               :api-end-point -> method :post       url :hospital/sign-in   					body 	: email, password
- ✓	fetch profile                                        :api-end-point -> method :get       url :hospital/fetch-profile    			query	: hospitalId
+ ✓	fetch profile                                       :api-end-point -> method :get        url :hospital/fetch-profile    			query	: hospitalId
  ✓	create patient                                      :api-end-point -> method :post       url :hospital/create-patient  				body 	: name, email, password, address, gender, dob, state, phone, wallet, hospitalId  
  ✓	update patient data                                 :api-end-point -> method :put        url :hospital/update-patient-report        body 	: hospitalId, patientId, patientReport
  ✓	share patient data to other hospitals               :api-end-point -> method :put        url :hospital/authorize-hospital           body 	: hospitalId, patientId, hospitalToBeAuthorizedId
  ✓	share patient data to insurance companies           :api-end-point -> method :put        url :hospital/authorize-insurance-company  body    : hospitalId, patientId, insuranceCompanyToBeAuthorizedId    
-	
+	fetch unauthorized hospitals 						:api-end-point -> method :get        url :hospital/fetch-unauthorized-hospitals   query	: patientId
+	fetch unauthorized insurance companies 				:api-end-point -> method :get        url :hospital/fetch-unauthorized-insurances  query	: patientId
+
+
+
  ✗	generate policy claim                               :api-end-point -> method :get        url :hospital/generate-policy-claim    
  ✗	view policy claim details                           :api-end-point -> method :get        url :hospital/view-policy-claim    
  ✗	generate patient data                               :api-end-point -> method :post       url :hospital/generate-patient-data    
@@ -35,14 +39,14 @@ admin :
  ✓	create insurance company                            :api-end-point -> method :post       url :admin/create-insurance-company 		body : name, email, password, address, state, phone, wallet, adminWalletAddress
 	fetch all hospitals 
 	fetch all insurance companies 
-	
+
  -	delete hospital                                     :api-end-point -> method :delete     url :admin/delete-hospital 
  -	delete insurance company                            :api-end-point -> method :delete     url :admin/delete-insurance-company
 	
 common :
  ✓	fetch patient profile			          			:api-end-point -> method :get        url :common/fetch-patient-profile			query	: patientId
  ✓	fetch wallet addressess 							:api-end-point -> method :get 		 url :common/fetch-wallet-addresses	
- ✓	fetch authorized hospitals                          :api-end-point -> method :get        url :common/fetch-authorized-hospitals  	query	: patientId
- ✓	fetch authorized insurances                         :api-end-point -> method :get        url :common/fetch-authorized-insurances    query   : patientId
- ✓	fetch patient reports			          			:api-end-point -> method :get        url :common/fetch-patient-reports			query	: patientId
- ✓	fetch unused wallet addresses			          	:api-end-point -> method :get        url :common/fetch-unused-addresses		
+ ✓	fetch authorized hospitals                          :api-end-point -> method :get        url :common/fetch-authorized-hospitals  	query	: patientId, patientIdAsSender (if fetched in patient page), hospitalIdAsSender (if fetched in hospital page)
+ ✓	fetch authorized insurances                         :api-end-point -> method :get        url :common/fetch-authorized-insurances    query   : patientId, patientIdAsSender (if fetched in patient page), hospitalIdAsSender (if fetched in hospital page)
+ ✓	fetch patient reports			          			:api-end-point -> method :get        url :common/fetch-patient-reports			query	: patientId, patientIdAsSender (if fetched in patient page), hospitalIdAsSender (if fetched in hospital page), insuranceCompanyIdAsSender (if fetched in insurance page)
+ ✓	fetch unused wallet addresses			          	:api-end-point -> method :get        url :common/fetch-unused-addresses		 
