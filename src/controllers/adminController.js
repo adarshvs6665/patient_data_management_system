@@ -39,17 +39,11 @@ const adminCreateHospitalController = async (req, res) => {
     state,
     phone,
     wallet: hospitalWalletAddress,
-    adminWalletAddress,
+    adminId,
   } = req.body;
-  if (await Hospital.findOne({ email })) {
-    const response = {
-      status: "failed",
-      message: "hospital email already in use",
-    };
-    res.status(409).json({
-      response,
-    });
-  } else if (
+  const admin = await Admin.findOne({ adminId });
+  const hospital = await Hospital.findOne({ email });
+  if (
     !name ||
     !email ||
     !password ||
@@ -57,7 +51,7 @@ const adminCreateHospitalController = async (req, res) => {
     !state ||
     !phone ||
     !hospitalWalletAddress ||
-    !adminWalletAddress
+    !adminId
   ) {
     const response = {
       status: "failed",
@@ -66,8 +60,25 @@ const adminCreateHospitalController = async (req, res) => {
     res.status(400).json({
       response,
     });
+  } else if (!admin) {
+    const response = {
+      status: "failed",
+      message: "admin with the id does not exist",
+    };
+    res.status(409).json({
+      response,
+    });
+  } else if (hospital) {
+    const response = {
+      status: "failed",
+      message: "hospital email already in use",
+    };
+    res.status(409).json({
+      response,
+    });
   } else {
     const hospitalId = uuidv4();
+    const adminWalletAddress = admin.wallet;
     createHospitalService(adminWalletAddress, hospitalWalletAddress, hospitalId)
       .then(async (response) => {
         if (response.status != "success") {
@@ -135,18 +146,12 @@ const adminCreateInsuranceController = async (req, res) => {
     state,
     phone,
     wallet: insuranceWalletAddress,
-    adminWalletAddress,
+    adminId,
   } = req.body;
 
-  if (await Insurance.findOne({ email })) {
-    const response = {
-      status: "failed",
-      message: "insurance company email already in use",
-    };
-    res.status(409).json({
-      response,
-    });
-  } else if (
+  const admin = await Admin.findOne({ adminId });
+  const insurance = await Insurance.findOne({ email });
+  if (
     !name ||
     !email ||
     !password ||
@@ -154,7 +159,7 @@ const adminCreateInsuranceController = async (req, res) => {
     !state ||
     !phone ||
     !insuranceWalletAddress ||
-    !adminWalletAddress
+    !adminId
   ) {
     const response = {
       status: "failed",
@@ -163,8 +168,25 @@ const adminCreateInsuranceController = async (req, res) => {
     res.status(400).json({
       response,
     });
+  } else if (!admin) {
+    const response = {
+      status: "failed",
+      message: "admin with the id does not exist",
+    };
+    res.status(409).json({
+      response,
+    });
+  } else if (insurance) {
+    const response = {
+      status: "failed",
+      message: "insurance company email already in use",
+    };
+    res.status(409).json({
+      response,
+    });
   } else {
     const insuranceCompanyId = uuidv4();
+    const adminWalletAddress = admin.wallet;
     createInsuranceCompanyService(
       adminWalletAddress,
       insuranceWalletAddress,
