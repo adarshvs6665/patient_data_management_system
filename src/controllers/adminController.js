@@ -8,6 +8,7 @@ const {
   fetchAllHospitalsService,
   createInsuranceCompanyService,
 } = require("../services/blockchain/blockchainService");
+const UsedAddress = require("../models/usedAddressModel");
 
 const adminSignInController = async (req, res) => {
   const { email, password } = req.body;
@@ -95,6 +96,9 @@ const adminCreateHospitalController = async (req, res) => {
           phone,
           wallet: hospitalWalletAddress,
         });
+
+        const usedAddress = new UsedAddress({address: hospitalWalletAddress})
+        await usedAddress.save();
         const result = await hospital.save();
         const { transactionHash } = response.data;
         const { password: rmPass, ...hospitalData } = result._doc;
@@ -207,6 +211,10 @@ const adminCreateInsuranceController = async (req, res) => {
           phone,
           wallet: insuranceWalletAddress,
         });
+
+        const usedAddress = new UsedAddress({address: insuranceWalletAddress})
+        await usedAddress.save();
+
         const result = await insuranceCompany.save();
         const { transactionHash } = response.data;
         const { password: rmPass, ...insuranceCompanyData } = result._doc;

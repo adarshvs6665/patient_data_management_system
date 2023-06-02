@@ -7,6 +7,7 @@ const {
   fetchAuthorizedHospitalsService,
   fetchAuthorizedInsuranceCompaniesService,
 } = require("../services/blockchain/blockchainService");
+const UsedAddress = require("../models/usedAddressModel");
 
 const fetchPatientProfileController = async (req, res) => {
   const { patientId } = req.query;
@@ -70,15 +71,16 @@ const fetchPatientReportsController = async (req, res) => {
           if (response.status != "success") {
             res.status(404).json(response);
           } else {
-            const reportsArray = response.data.patientInfo['patientData'];
-            const reportsArrayNew = await Promise.all(reportsArray.map((report) => {
-              return JSON.parse(report);
-            }))
+            const reportsArray = response.data.patientInfo["patientData"];
+            const reportsArrayNew = await Promise.all(
+              reportsArray.map((report) => {
+                return JSON.parse(report);
+              })
+            );
             response.data.patientInfo = undefined;
-            response.data.reports = reportsArrayNew
+            response.data.reports = reportsArrayNew;
             res.status(200).json(response);
           }
-          
         });
       }
     }
@@ -256,10 +258,42 @@ const fetchAuthorizedInsurancesController = async (req, res) => {
   }
 };
 
+const fetchUnusedAddressesController = async (req, res) => {
+  try {
+    fetchWalletAddressesService().then(async (response) => {
+      if (response.status == "success") {
+        const addresses = response.data.addresses;
+        const unusedAddresses = await Promise.all(addresses.map(async (address) =>{
+          const addressInDB = await UsedAddress.findOne({address})
+          if(!addressInDB) return address
+          else return null;
+        }))
+
+        // removing null values
+        const filteredAddresses = unusedAddresses.filter(address => address !== null);
+        // setting filtered address as response
+        response.data.addresses = filteredAddresses
+        res.status(200).json(response);
+      } else {
+        res.status(404).json(response);
+      }
+    });
+  } 
+  // handling errors
+  catch (error) {
+    const response = {
+      status: "failed",
+      message: error.message,
+    };
+    res.status(500).json(response);
+  }
+};
+
 module.exports = {
   fetchPatientProfileController,
   fetchAllWalletAddressesController,
   fetchAuthorizedHospitalsController,
   fetchAuthorizedInsurancesController,
   fetchPatientReportsController,
+  fetchUnusedAddressesController,
 };

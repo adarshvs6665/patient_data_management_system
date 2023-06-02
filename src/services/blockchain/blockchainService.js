@@ -414,8 +414,7 @@ const fetchWalletAddressesService = async () => {
       status: "success",
       message: "fetched wallet addresses successfully",
       data: {
-        length: accounts.length,
-        accounts,
+        addresses: accounts,
       },
     };
     return response;

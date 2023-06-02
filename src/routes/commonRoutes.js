@@ -23,5 +23,10 @@ router.get(
   commonController.fetchPatientReportsController
 );
 
+router.get(
+  "/fetch-unused-addresses",
+  commonController.fetchUnusedAddressesController
+);
+
 
 module.exports = router;

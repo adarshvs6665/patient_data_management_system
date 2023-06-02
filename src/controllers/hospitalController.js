@@ -137,6 +137,10 @@ const hospitalCreatePatientController = async (req, res) => {
           phone,
           wallet: patientWalletAddress,
         });
+
+        const usedAddress = new UsedAddress({ address: patientWalletAddress });
+        await usedAddress.save();
+
         const result = await patient.save();
         const { transactionHash } = response.data;
 
