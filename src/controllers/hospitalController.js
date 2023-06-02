@@ -16,14 +16,12 @@ const hospitalSignInController = async (req, res) => {
   const hospital = await Hospital.findOne({ email });
   if (hospital) {
     if (password === hospital.password) {
-      res
-        .status(200)
-        .json({
-          status: "success",
-          message: "Login Sucess",
-          role: "hospital",
-          id: hospital.hospitalId,
-        });
+      res.status(200).json({
+        status: "success",
+        message: "Login Sucess",
+        role: "hospital",
+        id: hospital.hospitalId,
+      });
     } else {
       res.json({ message: "Invalid Password" });
     }
@@ -176,7 +174,17 @@ const hospitalUpdatePatientMedicalReportController = async (req, res) => {
   const patient = await Patient.findOne({ patientId });
   const hospital = await Hospital.findOne({ hospitalId });
   // handles when required data is not passed to the endpoint
-  if (!patientId || !hospitalId || !patientReport) {
+  if (
+    !patientId ||
+    !hospitalId ||
+    !patientReport ||
+    !patientReport.dateOfVisit ||
+    !patientReport.causeOfVisit ||
+    !patientReport.condition ||
+    !patientReport.description ||
+    !patientReport.doctor ||
+    !patientReport.medication
+  ) {
     const response = {
       status: "failed",
       message: "insufficient information",
@@ -209,6 +217,7 @@ const hospitalUpdatePatientMedicalReportController = async (req, res) => {
     const patientWalletAddress = patient.wallet;
     patientReport.hospitalId = hospitalId;
     patientReport.reportId = uuidv4();
+    patientReport.hospitalName = hospital.name;
 
     updatePatientReportService(
       hospitalWalletAddress,
@@ -408,9 +417,6 @@ const authorizeInsuranceCompanyController = async (req, res) => {
   }
 };
 
-
-const fetchAuthorizedInsurancesController = async (req, res) => {};
-
 const hospitalGeneratePolicyClaimController = async (req, res) => {};
 
 const hospitalViewPolicyClaimController = async (req, res) => {};
@@ -423,7 +429,6 @@ module.exports = {
   hospitalUpdatePatientMedicalReportController,
   authorizeHospitalController,
   authorizeInsuranceCompanyController,
-  fetchAuthorizedInsurancesController,
   hospitalGeneratePolicyClaimController,
   hospitalViewPolicyClaimController,
 };

@@ -29,11 +29,6 @@ router.put(
 );
 
 router.get(
-  "/view-auth-insurance-list",
-  hospitalController.fetchAuthorizedInsurancesController
-);
-
-router.get(
   "/generate-policy-claim",
   hospitalController.hospitalGeneratePolicyClaimController
 );

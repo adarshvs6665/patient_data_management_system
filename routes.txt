@@ -12,9 +12,7 @@ hospital :
  ✓	create patient                                      :api-end-point -> method :post       url :hospital/create-patient  				body 	: name, email, password, address, gender, dob, state, phone, wallet, hospitalId  
  ✓	update patient data                                 :api-end-point -> method :put        url :hospital/update-patient-report        body 	: hospitalId, patientId, patientReport
  ✓	share patient data to other hospitals               :api-end-point -> method :put        url :hospital/authorize-hospital           body 	: hospitalId, patientId, hospitalToBeAuthorizedId
- ✓	share patient data to insurance companies           :api-end-point -> method :put        url :hospital/authorize-insurance-company  body    : hospitalId, patientId, insuranceCompanyToBeAuthorizedId
-	view hospitals having access to data                :api-end-point -> method :get        url :hospital/fetch-authorized-hospitals  
-	view insurance companies having access to data      :api-end-point -> method :get        url :hospital/fetch-authorized-insurances      
+ ✓	share patient data to insurance companies           :api-end-point -> method :put        url :hospital/authorize-insurance-company  body    : hospitalId, patientId, insuranceCompanyToBeAuthorizedId    
 	generate policy claim                               :api-end-point -> method :get        url :hospital/generate-policy-claim    
 	view policy claim details                           :api-end-point -> method :get        url :hospital/view-policy-claim    
 	
@@ -37,5 +35,8 @@ admin :
 	delete insurance company                            :api-end-point -> method :delete     url :admin/delete-insurance-company
 	
 common :
-	view patient details of a single patient            :api-end-point -> method :get        url :common/view-patient-details
- ✓	fetch wallet addressess 							:api-end-point -> method :get 		 url :common/fetch-wallet-addresses
+ ✓	fetch patient profile			          			:api-end-point -> method :get        url :common/fetch-patient-profile			query	: patientId
+ ✓	fetch wallet addressess 							:api-end-point -> method :get 		 url :common/fetch-wallet-addresses	
+ ✓	fetch authorized hospitals                          :api-end-point -> method :get        url :common/fetch-authorized-hospitals  	query	: patientId
+ ✓	fetch authorized insurances                         :api-end-point -> method :get        url :common/fetch-authorized-insurances    query   : patientId
+ ✓	fetch patient reports			          			:api-end-point -> method :get        url :common/fetch-patient-reports			query	: patientId
