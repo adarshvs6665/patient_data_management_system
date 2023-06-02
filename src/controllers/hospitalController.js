@@ -316,7 +316,6 @@ const authorizeHospitalController = async (req, res) => {
     )
       .then((response) => {
         if (response.status != "success") {
-          console.log(response);
           res.status(404).json(response);
         } else {
           res.status(200).json(response);
@@ -511,7 +510,6 @@ const fetchUnAuthorizedInsurancesController = async (req, res) => {
           if (response.status != "success") {
             res.status(404).json(response);
           } else {
-            console.log(response);
             const authorizedInsuranceCompaniesArray = response.data.authorizedInsuranceCompanies;
             const insuranceCompanies = await Insurance.find({}, { password: 0 });
             const unAuthorizedInsuranceCompanies = insuranceCompanies.filter(
