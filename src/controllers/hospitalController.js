@@ -8,6 +8,7 @@ const {
   addAuthorizedHospitalService,
   addAuthorizedInsuranceCompanyService,
   fetchAuthorizedHospitalsService,
+  fetchAuthorizedInsuranceCompaniesService,
 } = require("../services/blockchain/blockchainService");
 const Insurance = require("../models/insuranceModel");
 const UsedAddress = require("../models/usedAddressModel");
@@ -423,39 +424,49 @@ const authorizeInsuranceCompanyController = async (req, res) => {
 };
 
 const fetchUnAuthorizedHospitalsController = async (req, res) => {
-  const { patientId } = req.query;
+  const { patientId, hospitalId } = req.query;
+  const patient = await Patient.findOne({ patientId }).lean();
+  const hospital = await Hospital.findOne({ hospitalId }).lean();
   try {
-    if (!patientId) {
+    if (!patientId || !hospitalId) {
       const response = {
         status: "failed",
-        message: "please provide a patient as query parameter",
+        message: "insufficient information",
+      };
+      res.status(400).json(response);
+    }
+    // handles when patient does not exist
+    else if (!patient) {
+      const response = {
+        status: "failed",
+        message: "patient does not exist",
+      };
+      res.status(404).json({
+        response,
+      });
+    } else if (!hospital) {
+      const response = {
+        status: "failed",
+        message: "unknown sender",
       };
       res.status(400).json(response);
     } else {
-      const patient = await Patient.findOne({ patientId }).lean();
-      if (!patient.wallet) {
-        const response = {
-          status: "failed",
-          message: "patient does not exist",
-        };
-        res.status(400).json(response);
-      } else {
-        fetchPatientInfoService(patient.wallet).then(async (response) => {
+      fetchAuthorizedHospitalsService(patient.wallet, hospital.wallet).then(
+        async (response) => {
           if (response.status != "success") {
             res.status(404).json(response);
           } else {
-            const reportsArray = response.data.patientInfo["patientData"];
-            const reportsArrayNew = await Promise.all(
-              reportsArray.map((report) => {
-                return JSON.parse(report);
-              })
+            const authorizedHospitalsArray = response.data.authorizedHospitals;
+            const hospitals = await Hospital.find({}, { password: 0 });
+            const unauthorizedHospitals = hospitals.filter(
+              (hospital) => !authorizedHospitalsArray.includes(hospital.wallet)
             );
-            response.data.patientInfo = undefined;
-            response.data.reports = reportsArrayNew;
+            response.data.authorizedHospitals = undefined;
+            response.data.unauthorizedHospitals = unauthorizedHospitals;
             res.status(200).json(response);
           }
-        });
-      }
+        }
+      );
     }
   } catch (error) {
     console.log(error);
@@ -465,9 +476,63 @@ const fetchUnAuthorizedHospitalsController = async (req, res) => {
     };
     res.status(500).json(response);
   }
-}
+};
 
-const fetchUnAuthorizedInsurancesController = (req, res) => {}
+const fetchUnAuthorizedInsurancesController = async (req, res) => {
+  const { patientId, hospitalId } = req.query;
+  const patient = await Patient.findOne({ patientId }).lean();
+  const hospital = await Hospital.findOne({ hospitalId }).lean();
+  try {
+    if (!patientId || !hospitalId) {
+      const response = {
+        status: "failed",
+        message: "insufficient information",
+      };
+      res.status(400).json(response);
+    }
+    // handles when patient does not exist
+    else if (!patient) {
+      const response = {
+        status: "failed",
+        message: "patient does not exist",
+      };
+      res.status(404).json({
+        response,
+      });
+    } else if (!hospital) {
+      const response = {
+        status: "failed",
+        message: "unknown sender",
+      };
+      res.status(400).json(response);
+    } else {
+      fetchAuthorizedInsuranceCompaniesService(patient.wallet, hospital.wallet).then(
+        async (response) => {
+          if (response.status != "success") {
+            res.status(404).json(response);
+          } else {
+            console.log(response);
+            const authorizedInsuranceCompaniesArray = response.data.authorizedInsuranceCompanies;
+            const insuranceCompanies = await Insurance.find({}, { password: 0 });
+            const unAuthorizedInsuranceCompanies = insuranceCompanies.filter(
+              (insurance) => !authorizedInsuranceCompaniesArray.includes(insurance.wallet)
+            );
+            response.data.authorizedInsuranceCompanies = undefined;
+            response.data.unAuthorizedInsuranceCompanies = unAuthorizedInsuranceCompanies;
+            res.status(200).json(response);
+          }
+        }
+      );
+    }
+  } catch (error) {
+    console.log(error);
+    const response = {
+      status: "failed",
+      message: "Internal Server Error",
+    };
+    res.status(500).json(response);
+  }
+};
 
 const hospitalGeneratePolicyClaimController = async (req, res) => {};
 
@@ -484,5 +549,5 @@ module.exports = {
   hospitalGeneratePolicyClaimController,
   hospitalViewPolicyClaimController,
   fetchUnAuthorizedHospitalsController,
-  fetchUnAuthorizedInsurancesController
+  fetchUnAuthorizedInsurancesController,
 };

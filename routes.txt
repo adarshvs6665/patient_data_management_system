@@ -14,8 +14,8 @@ hospital :
  ✓	update patient data                                 :api-end-point -> method :put        url :hospital/update-patient-report        body 	: hospitalId, patientId, patientReport
  ✓	share patient data to other hospitals               :api-end-point -> method :put        url :hospital/authorize-hospital           body 	: hospitalId, patientId, hospitalToBeAuthorizedId
  ✓	share patient data to insurance companies           :api-end-point -> method :put        url :hospital/authorize-insurance-company  body    : hospitalId, patientId, insuranceCompanyToBeAuthorizedId    
-	fetch unauthorized hospitals 						:api-end-point -> method :get        url :hospital/fetch-unauthorized-hospitals   query	: patientId
-	fetch unauthorized insurance companies 				:api-end-point -> method :get        url :hospital/fetch-unauthorized-insurances  query	: patientId
+ ✓	fetch unauthorized hospitals 						:api-end-point -> method :get        url :hospital/fetch-unauthorized-hospitals   query	: patientId, hospitalId
+ ✓	fetch unauthorized insurance companies 				:api-end-point -> method :get        url :hospital/fetch-unauthorized-insurances  query	: patientId, hospitalId
 
 
 

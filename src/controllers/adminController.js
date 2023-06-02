@@ -262,20 +262,32 @@ const adminDeleteInsuranceController = async (req, res) => {
 const adminFetchAllHospitalController = async (req, res) => {
   try {
     const allHospitalsData = await Hospital.find().lean();
-    res.json({ status: "success", message: "Hospitals Data Fetched sucessfully", data:allHospitalsData });
+    res.json({
+      status: "success",
+      message: "Hospitals Data Fetched sucessfully",
+      data: allHospitalsData,
+    });
   } catch (err) {
     console.log(err);
-    res.status(500).json({ status: "success", message: "Internal Server Error" });
+    res
+      .status(500)
+      .json({ status: "success", message: "Internal Server Error" });
   }
 };
 
 const adminFetchAllInsuranceController = async (req, res) => {
   try {
-    const allInsuranceData = await Hospital.find().lean();
-    res.json({ status: "success", message: "Insurance Data Fetched sucessfully", data:allInsuranceData });
+    const allInsuranceData = await Insurance.find().lean();
+    res.json({
+      status: "success",
+      message: "Insurance Data Fetched sucessfully",
+      data: allInsuranceData,
+    });
   } catch (err) {
     console.log(err);
-    res.status(500).json({ status: "success", message: "Internal Server Error" });
+    res
+      .status(500)
+      .json({ status: "success", message: "Internal Server Error" });
   }
 };
 
