@@ -11,6 +11,7 @@ const UsedAddress = require("../models/usedAddressModel");
 
 const fetchPatientProfileController = async (req, res) => {
   const { patientId } = req.query;
+  const patient = await Patient.findOne({ patientId }).lean();
   try {
     if (!patientId) {
       const response = {
@@ -18,8 +19,13 @@ const fetchPatientProfileController = async (req, res) => {
         message: "please provide a patient as query parameter",
       };
       res.status(400).json(response);
+    } else if (!patient) {
+      const response = {
+        status: "failed",
+        message: "patient does not exist",
+      };
+      res.status(400).json(response);
     } else {
-      const patient = await Patient.findOne({ patientId }).lean();
       console.log(patient);
       if (!patient.wallet) {
         const response = {
@@ -50,24 +56,51 @@ const fetchPatientProfileController = async (req, res) => {
 };
 
 const fetchPatientReportsController = async (req, res) => {
-  const { patientId } = req.query;
+  console.log(req.query);
+  const {
+    patientId,
+    patientIdAsSender,
+    insuranceCompanyIdAsSender,
+    hospitalIdAsSender,
+  } = req.query;
+  const patient = await Patient.findOne({ patientId }).lean();
+  let sender = null;
+
+  if (patientIdAsSender) {
+    sender = await Patient.findOne({ patientId: patientIdAsSender }).lean();
+  } else if (insuranceCompanyIdAsSender) {
+    sender = await Insurance.findOne({
+      insuranceCompanyId: insuranceCompanyIdAsSender,
+    }).lean();
+  } else if (hospitalIdAsSender) {
+    sender = await Hospital.findOne({ hospitalId: hospitalIdAsSender }).lean();
+  }
+
   try {
-    if (!patientId) {
+    if (
+      !patientId &&
+      !(patientIdAsSender || insuranceCompanyIdAsSender || hospitalIdAsSender)
+    ) {
       const response = {
         status: "failed",
         message: "please provide a patient as query parameter",
       };
       res.status(400).json(response);
+    } else if (!patient) {
+      const response = {
+        status: "failed",
+        message: "patient does not exist",
+      };
+      res.status(400).json(response);
+    } else if (!sender) {
+      const response = {
+        status: "failed",
+        message: "unknown sender",
+      };
+      res.status(400).json(response);
     } else {
-      const patient = await Patient.findOne({ patientId }).lean();
-      if (!patient.wallet) {
-        const response = {
-          status: "failed",
-          message: "patient does not exist",
-        };
-        res.status(400).json(response);
-      } else {
-        fetchPatientInfoService(patient.wallet).then(async (response) => {
+      fetchPatientInfoService(patient.wallet, sender.wallet).then(
+        async (response) => {
           if (response.status != "success") {
             res.status(404).json(response);
           } else {
@@ -81,8 +114,8 @@ const fetchPatientReportsController = async (req, res) => {
             response.data.reports = reportsArrayNew;
             res.status(200).json(response);
           }
-        });
-      }
+        }
+      );
     }
   } catch (error) {
     console.log(error);
@@ -114,8 +147,14 @@ const fetchAllWalletAddressesController = async (req, res) => {
 
 const fetchAuthorizedHospitalsController = async (req, res) => {
   // destructering data from request body
-  const { patientId } = req.query;
+  const { patientId, patientIdAsSender, hospitalIdAsSender } = req.query;
   const patient = await Patient.findOne({ patientId });
+  let sender = null;
+  if (patientIdAsSender) {
+    sender = await Patient.findOne({ patientId: patientIdAsSender }).lean();
+  } else if (hospitalIdAsSender) {
+    sender = await Hospital.findOne({ hospitalId: hospitalIdAsSender }).lean();
+  }
 
   // handles when required data is not passed to the endpoint
   if (!patientId) {
@@ -136,12 +175,18 @@ const fetchAuthorizedHospitalsController = async (req, res) => {
     res.status(404).json({
       response,
     });
+  } else if (!sender) {
+    const response = {
+      status: "failed",
+      message: "unknown sender",
+    };
+    res.status(400).json(response);
   } else {
     // setting wallet addresses fetched from mongodb
     const patientWalletAddress = patient.wallet;
 
     // authorizing hospital
-    fetchAuthorizedHospitalsService(patientWalletAddress)
+    fetchAuthorizedHospitalsService(patientWalletAddress, sender.wallet)
       .then(async (response) => {
         if (response.status != "success") {
           console.log(response);
@@ -186,8 +231,15 @@ const fetchAuthorizedHospitalsController = async (req, res) => {
 
 const fetchAuthorizedInsurancesController = async (req, res) => {
   // destructering data from request body
-  const { patientId } = req.query;
+  const { patientId, patientIdAsSender, hospitalIdAsSender } = req.query;
   const patient = await Patient.findOne({ patientId });
+
+  let sender = null;
+  if (patientIdAsSender) {
+    sender = await Patient.findOne({ patientId: patientIdAsSender }).lean();
+  } else if (hospitalIdAsSender) {
+    sender = await Hospital.findOne({ hospitalId: hospitalIdAsSender }).lean();
+  }
 
   // handles when required data is not passed to the endpoint
   if (!patientId) {
@@ -208,12 +260,21 @@ const fetchAuthorizedInsurancesController = async (req, res) => {
     res.status(404).json({
       response,
     });
+  } else if (!sender) {
+    const response = {
+      status: "failed",
+      message: "unknown sender",
+    };
+    res.status(400).json(response);
   } else {
     // setting wallet addresses fetched from mongodb
     const patientWalletAddress = patient.wallet;
 
     // authorizing hospital
-    fetchAuthorizedInsuranceCompaniesService(patientWalletAddress)
+    fetchAuthorizedInsuranceCompaniesService(
+      patientWalletAddress,
+      sender.wallet
+    )
       .then(async (response) => {
         if (response.status != "success") {
           console.log(response);
@@ -259,28 +320,32 @@ const fetchAuthorizedInsurancesController = async (req, res) => {
 };
 
 const fetchUnusedAddressesController = async (req, res) => {
+  
   try {
     fetchWalletAddressesService().then(async (response) => {
       if (response.status == "success") {
         const addresses = response.data.addresses;
-        const unusedAddresses = await Promise.all(addresses.map(async (address) =>{
-          const addressInDB = await UsedAddress.findOne({address})
-          if(!addressInDB) return address
-          else return null;
-        }))
+        const unusedAddresses = await Promise.all(
+          addresses.map(async (address) => {
+            const addressInDB = await UsedAddress.findOne({ address });
+            if (!addressInDB) return address;
+            else return null;
+          })
+        );
 
         // removing null values
-        const filteredAddresses = unusedAddresses.filter(address => address !== null);
+        const filteredAddresses = unusedAddresses.filter(
+          (address) => address !== null
+        );
         // setting filtered address as response
-        response.data.addresses = filteredAddresses
+        response.data.addresses = filteredAddresses;
         res.status(200).json(response);
       } else {
         res.status(404).json(response);
       }
     });
-  } 
-  // handling errors
-  catch (error) {
+  } catch (error) {
+    // handling errors
     const response = {
       status: "failed",
       message: error.message,
