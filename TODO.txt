@@ -1,4 +1,0 @@
-Javascript
-    function to get single hospital details
-    function to get single patient details
-    function to get single insurance company details
