@@ -2,24 +2,28 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const AdminSchema = new Schema(
-    {
-        email: {
-            type: String,
-            required: true,
-            unique: true,
-            lowercase: true,
-        },
-        password: {
-            type: String,
-            required: true,
-            minlength: [8, "Password should contain atleast 8 characters"],
-        },
-        wallet: {
-            type: String,
-            required: true,
-        },
+  {
+    adminId: {
+      type: String,
+      required: true,
     },
-    { timestamps: true }
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+    },
+    password: {
+      type: String,
+      required: true,
+      minlength: [8, "Password should contain atleast 8 characters"],
+    },
+    wallet: {
+      type: String,
+      required: true,
+    },
+  },
+  { timestamps: true }
 );
 
 const Admin = mongoose.model("Admin", AdminSchema);

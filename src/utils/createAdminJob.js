@@ -2,6 +2,7 @@ const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const mongoConnection = require("./connection");
+const { v4: uuidv4 } = require("uuid");
 const Admin = require("../models/adminModel");
 const {
     fetchAdminAddressService,
@@ -30,6 +31,7 @@ const createAdmin = async () => {
             };
             const adminWalletAddress = response.data.adminAddress;
             const admin = new Admin({
+                adminId: uuidv4(),
                 email: "admin@dapp.com",
                 password: "admin123#",
                 wallet: adminWalletAddress,

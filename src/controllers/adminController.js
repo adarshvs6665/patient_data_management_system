@@ -14,12 +14,17 @@ const adminSignInController = async (req, res) => {
   const admin = await Admin.findOne({ email });
   if (admin) {
     if (password === admin.password) {
-      res.status(200).json({ status:"success", message: "Login Sucess" ,role:"admin", id:admin.id});
+      res.status(200).json({
+        status: "success",
+        message: "Login Sucess",
+        role: "admin",
+        id: admin.adminId,
+      });
     } else {
-      res.status(400).json({status:"failed", message: "Invalid Password" });
+      res.status(400).json({ status: "failed", message: "Invalid Password" });
     }
   } else {
-    res.status(400).json({status:"failed", message: "Invalid Email" });
+    res.status(400).json({ status: "failed", message: "Invalid Email" });
   }
 };
 
@@ -38,12 +43,12 @@ const adminCreateHospitalController = async (req, res) => {
   } = req.body;
   if (await Hospital.findOne({ email })) {
     const response = {
-        status: "failed",
-        message: "hospital email already in use",
-      };
-      res.status(409).json({
-        response,
-      });
+      status: "failed",
+      message: "hospital email already in use",
+    };
+    res.status(409).json({
+      response,
+    });
   } else if (
     !name ||
     !email ||
@@ -135,12 +140,12 @@ const adminCreateInsuranceController = async (req, res) => {
 
   if (await Insurance.findOne({ email })) {
     const response = {
-        status: "failed",
-        message: "insurance company email already in use",
-      };
-      res.status(409).json({
-        response,
-      });
+      status: "failed",
+      message: "insurance company email already in use",
+    };
+    res.status(409).json({
+      response,
+    });
   } else if (
     !name ||
     !email ||
