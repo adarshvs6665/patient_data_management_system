@@ -35,8 +35,8 @@ insurance :
 
 admin :
  ✓	login                                               :api-end-point -> method :post       url :admin/sign-in							body 	: email, password
- ✓	create hospital                                     :api-end-point -> method :post       url :admin/create-hospital 				body : name, email, password, address, state, phone, wallet, adminWalletAddress
- ✓	create insurance company                            :api-end-point -> method :post       url :admin/create-insurance-company 		body : name, email, password, address, state, phone, wallet, adminWalletAddress
+ ✓	create hospital                                     :api-end-point -> method :post       url :admin/create-hospital 				body : name, email, password, address, state, phone, wallet, adminId
+ ✓	create insurance company                            :api-end-point -> method :post       url :admin/create-insurance-company 		body : name, email, password, address, state, phone, wallet, adminId
 	fetch all hospitals 
 	fetch all insurance companies 
 
