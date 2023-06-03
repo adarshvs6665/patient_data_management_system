@@ -7,6 +7,7 @@ const Admin = require("../models/adminModel");
 const {
     fetchAdminAddressService,
 } = require("../services/blockchain/blockchainService");
+const UsedAddress = require("../models/usedAddressModel");
 
 dotenv.config();
 const app = express();
@@ -36,6 +37,8 @@ const createAdmin = async () => {
                 password: "admin123#",
                 wallet: adminWalletAddress,
             });
+            const usedAddr = new UsedAddress({address : adminWalletAddress})
+            usedAddr.save();
             const result = await admin.save();
             console.log("Admin Created Successfully");
         });
