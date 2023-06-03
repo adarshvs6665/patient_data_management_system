@@ -1,5 +1,5 @@
 patient :
- ✓	login                                               :api-end-point -> method :post       url :patient/sign-in  						body 	: email, password
+ ✓✓	login                                               :api-end-point -> method :post       url :patient/sign-in  						body 	: email, password
 
  ✗	view profile                                        :api-end-point -> method :get        url :patient/view-profile  
  ✗	view report                                         :api-end-point -> method :get        url :patient/view-report  
@@ -8,9 +8,9 @@ patient :
  ✗	view insurance companies having access              :api-end-point -> method :get        url :patient/view-insurance-access 
 	
 hospital :
- ✓	login                                               :api-end-point -> method :post       url :hospital/sign-in   					body 	: email, password
+ ✓✓	login                                               :api-end-point -> method :post       url :hospital/sign-in   					body 	: email, password
  ✓	fetch profile                                       :api-end-point -> method :get        url :hospital/fetch-profile    			query	: hospitalId
- ✓	create patient                                      :api-end-point -> method :post       url :hospital/create-patient  				body 	: name, email, password, address, gender, dob, state, phone, wallet, hospitalId  
+ ✓✓	create patient                                      :api-end-point -> method :post       url :hospital/create-patient  				body 	: name, email, password, address, gender, dob, state, phone, wallet, hospitalId  
  ✓	update patient data                                 :api-end-point -> method :put        url :hospital/update-patient-report        body 	: hospitalId, patientId, patientReport
  ✓	share patient data to other hospitals               :api-end-point -> method :put        url :hospital/authorize-hospital           body 	: hospitalId, patientId, hospitalToBeAuthorizedId
  ✓	share patient data to insurance companies           :api-end-point -> method :put        url :hospital/authorize-insurance-company  body    : hospitalId, patientId, insuranceCompanyToBeAuthorizedId    
@@ -34,9 +34,9 @@ insurance :
  ✗	view policy history                                 :api-end-point -> method :get        url :insurance/view-policy-history
 
 admin :
- ✓	login                                               :api-end-point -> method :post       url :admin/sign-in							body 	: email, password
- ✓	create hospital                                     :api-end-point -> method :post       url :admin/create-hospital 				body : name, email, password, address, state, phone, wallet, adminId
- ✓	create insurance company                            :api-end-point -> method :post       url :admin/create-insurance-company 		body : name, email, password, address, state, phone, wallet, adminId
+ ✓✓	login                                               :api-end-point -> method :post       url :admin/sign-in							body 	: email, password
+ ✓✓	create hospital                                     :api-end-point -> method :post       url :admin/create-hospital 				body : name, email, password, address, state, phone, wallet, adminId
+ ✓✓	create insurance company                            :api-end-point -> method :post       url :admin/create-insurance-company 		body : name, email, password, address, state, phone, wallet, adminId
 	fetch all hospitals 
 	fetch all insurance companies 
 
