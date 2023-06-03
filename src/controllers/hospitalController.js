@@ -9,6 +9,7 @@ const {
   addAuthorizedInsuranceCompanyService,
   fetchAuthorizedHospitalsService,
   fetchAuthorizedInsuranceCompaniesService,
+  fetchAllPatientsService,
 } = require("../services/blockchain/blockchainService");
 const Insurance = require("../models/insuranceModel");
 const UsedAddress = require("../models/usedAddressModel");
@@ -505,22 +506,26 @@ const fetchUnAuthorizedInsurancesController = async (req, res) => {
       };
       res.status(400).json(response);
     } else {
-      fetchAuthorizedInsuranceCompaniesService(patient.wallet, hospital.wallet).then(
-        async (response) => {
-          if (response.status != "success") {
-            res.status(404).json(response);
-          } else {
-            const authorizedInsuranceCompaniesArray = response.data.authorizedInsuranceCompanies;
-            const insuranceCompanies = await Insurance.find({}, { password: 0 });
-            const unAuthorizedInsuranceCompanies = insuranceCompanies.filter(
-              (insurance) => !authorizedInsuranceCompaniesArray.includes(insurance.wallet)
-            );
-            response.data.authorizedInsuranceCompanies = undefined;
-            response.data.unAuthorizedInsuranceCompanies = unAuthorizedInsuranceCompanies;
-            res.status(200).json(response);
-          }
+      fetchAuthorizedInsuranceCompaniesService(
+        patient.wallet,
+        hospital.wallet
+      ).then(async (response) => {
+        if (response.status != "success") {
+          res.status(404).json(response);
+        } else {
+          const authorizedInsuranceCompaniesArray =
+            response.data.authorizedInsuranceCompanies;
+          const insuranceCompanies = await Insurance.find({}, { password: 0 });
+          const unAuthorizedInsuranceCompanies = insuranceCompanies.filter(
+            (insurance) =>
+              !authorizedInsuranceCompaniesArray.includes(insurance.wallet)
+          );
+          response.data.authorizedInsuranceCompanies = undefined;
+          response.data.unAuthorizedInsuranceCompanies =
+            unAuthorizedInsuranceCompanies;
+          res.status(200).json(response);
         }
-      );
+      });
     }
   } catch (error) {
     console.log(error);
@@ -532,9 +537,59 @@ const fetchUnAuthorizedInsurancesController = async (req, res) => {
   }
 };
 
-const hospitalGeneratePolicyClaimController = async (req, res) => {};
+const fetchAuthorizedPatientsController = async (req, res) => {
+  const { hospitalId } = req.query;
+  const hospital = await Hospital.findOne({ hospitalId }).lean();
+  try {
+    // handles when required data is not passed to the endpoint
+    if (!hospitalId) {
+      const response = {
+        status: "failed",
+        message: "insufficient information",
+      };
+      res.status(400).json({
+        response,
+      });
+    }
+    // handles when hospital does not exist
+    else if (!hospital) {
+      const response = {
+        status: "failed",
+        message: "hospital does not exist",
+      };
+      res.status(404).json({
+        response,
+      });
+    } else {
+      fetchAllPatientsService(hospital.wallet).then(async (response) => {
+        // console.log(response.data.patients[0]['authorizedHospitals']);
+        const patientsArray = response.data.patients;
+        const patientIdsArray = await Promise.all(
+          patientsArray.map((patient) => {
+            if (patient["authorizedHospitals"].includes(hospital.wallet))
+              return patient["patientId"];
+            else return null;
+          })
+        );
 
-const hospitalViewPolicyClaimController = async (req, res) => {};
+        // removing null values
+        const filteredPatientIdsArray = patientIdsArray.filter(
+          (id) => id !== null
+        );
+
+        const patientDetailsArray = await Promise.all(
+          filteredPatientIdsArray.map(async (id)=> {
+            const patient = await Patient.findOne({patientId: id})
+            return patient;
+          })
+        )
+        response.data.patients = undefined;
+        response.data.patients = patientDetailsArray;
+        res.send(response);
+      });
+    }
+  } catch (error) {}
+};
 
 module.exports = {
   hospitalSignInController,
@@ -544,8 +599,7 @@ module.exports = {
   hospitalUpdatePatientMedicalReportController,
   authorizeHospitalController,
   authorizeInsuranceCompanyController,
-  hospitalGeneratePolicyClaimController,
-  hospitalViewPolicyClaimController,
   fetchUnAuthorizedHospitalsController,
   fetchUnAuthorizedInsurancesController,
+  fetchAuthorizedPatientsController,
 };

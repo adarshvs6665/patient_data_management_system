@@ -139,10 +139,20 @@ const createPatientService = async (
 };
 
 // fetch all patients
-const fetchAllPatientsService = async () => {
+const fetchAllPatientsService = async (senderWalletAddress) => {
   try {
-    const patients = await contract.methods.getAllPatients().call();
+    // const patients = await contract.methods.getAllPatients().call();
     // console.log("List of patients:", patients);
+console.log(senderWalletAddress);
+    const transaction = contract.methods.getAllPatients();
+    const gas = await transaction.estimateGas({ from: senderWalletAddress });
+
+    const patients = await transaction.call({
+      from: senderWalletAddress,
+      gas: gas,
+    });
+
+    console.log(gas);
 
     const response = {
       status: "success",

@@ -17,6 +17,11 @@ router.get(
 );
 
 router.get(
+  "/fetch-authorized-patients",
+  insuranceController.fetchAuthorizedPatientsController
+);
+
+router.get(
   "/view-data-attached-to-policy-claims",
   insuranceController.insuranceViewPolicyClaimsDataController
 );

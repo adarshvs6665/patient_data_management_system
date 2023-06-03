@@ -28,15 +28,15 @@ router.put(
   hospitalController.authorizeInsuranceCompanyController
 );
 
-router.get(
-  "/generate-policy-claim",
-  hospitalController.hospitalGeneratePolicyClaimController
-);
+// router.get(
+//   "/generate-policy-claim",
+//   hospitalController.hospitalGeneratePolicyClaimController
+// );
 
-router.get(
-  "/view-policy-claim",
-  hospitalController.hospitalViewPolicyClaimController
-);
+// router.get(
+//   "/view-policy-claim",
+//   hospitalController.hospitalViewPolicyClaimController
+// );
 
 router.get(
   "/fetch-unauthorized-hospitals",
@@ -46,6 +46,11 @@ router.get(
 router.get(
   "/fetch-unauthorized-insurances",
   hospitalController.fetchUnAuthorizedInsurancesController
+);
+
+router.get(
+  "/fetch-authorized-patients",
+  hospitalController.fetchAuthorizedPatientsController
 );
 
 module.exports = router;

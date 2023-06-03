@@ -16,7 +16,7 @@ hospital :
  ✓	share patient data to insurance companies           :api-end-point -> method :put        url :hospital/authorize-insurance-company  body    : hospitalId, patientId, insuranceCompanyToBeAuthorizedId    
  ✓	fetch unauthorized hospitals 						:api-end-point -> method :get        url :hospital/fetch-unauthorized-hospitals   query	: patientId, hospitalId
  ✓	fetch unauthorized insurance companies 				:api-end-point -> method :get        url :hospital/fetch-unauthorized-insurances  query	: patientId, hospitalId
-
+ ✓	fetch authorized patients                           :api-end-point -> method :get        url :hospital/fetch-authorized-patients      query : hospitalId
 
 
  ✗	generate policy claim                               :api-end-point -> method :get        url :hospital/generate-policy-claim    
@@ -26,7 +26,8 @@ hospital :
 insurance :
  ✓	login                                               :api-end-point -> method :post       url :insurance/sign-in						body 	: email, password
  ✓	fetch profile 		                                :api-end-point -> method :get        url :insurance/fetch-profile				query	: insuranceCompanyId
-	
+ 	fetch authorized patients                           :api-end-point -> method :get        url :insurance/fetch-authorized-patients   query   : insuranceCompanyId
+
  ✗	view policy claims                                  :api-end-point -> method :get        url :insurance/view-policy-claims
  ✗	view data attached to policy claims                 :api-end-point -> method :get        url :insurance/view-data-attached-to-policy-claims
  ✗	accept claim                                        :api-end-point -> method :post       url :insurance/accept-claim
