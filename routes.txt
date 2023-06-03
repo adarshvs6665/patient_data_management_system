@@ -51,3 +51,13 @@ common :
  ✓	fetch authorized insurances                         :api-end-point -> method :get        url :common/fetch-authorized-insurances    query   : patientId, patientIdAsSender (if fetched in patient page), hospitalIdAsSender (if fetched in hospital page)
  ✓	fetch patient reports			          			:api-end-point -> method :get        url :common/fetch-patient-reports			query	: patientId, patientIdAsSender (if fetched in patient page), hospitalIdAsSender (if fetched in hospital page), insuranceCompanyIdAsSender (if fetched in insurance page)
  ✓	fetch unused wallet addresses			          	:api-end-point -> method :get        url :common/fetch-unused-addresses		 
+
+
+
+
+truffle migrate --reset 
+refresh the contracts page 
+click on medical records contract 
+copy the contract address and paste to env 
+delete all other tables in mongodb except admin and usedAddresses table
+add admin wallet address to the usedAddresses table remove everything else 
