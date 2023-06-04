@@ -583,8 +583,13 @@ const fetchAuthorizedPatientsController = async (req, res) => {
             return patient;
           })
         )
+
+        const filteredPatientDetailsArray = patientDetailsArray.filter(
+          (patient) => patient !== null
+        );
+
         response.data.patients = undefined;
-        response.data.patients = patientDetailsArray;
+        response.data.patients = filteredPatientDetailsArray;
         res.send(response);
       });
     }
