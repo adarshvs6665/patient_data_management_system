@@ -30,7 +30,7 @@ const patientGenerateMedicalReportController = async (req, res) => {
   const doc = new PDFDocument();
   generateMedicalReport(req.body, doc);
   res.setHeader("Content-Type", "application/pdf");
-  res.setHeader("Content-Disposition", "attachment; filename=report.pdf");
+  res.setHeader("Content-Disposition", "attachment; filename=medical-report.pdf");
 
   // Pipe the PDF document to the response
   doc.pipe(res);
