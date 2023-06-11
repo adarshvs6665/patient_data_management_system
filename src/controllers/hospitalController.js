@@ -561,37 +561,51 @@ const fetchAuthorizedPatientsController = async (req, res) => {
         response,
       });
     } else {
-      fetchAllPatientsService(hospital.wallet).then(async (response) => {
-        // console.log(response.data.patients[0]['authorizedHospitals']);
-        const patientsArray = response.data.patients;
-        const patientIdsArray = await Promise.all(
-          patientsArray.map((patient) => {
-            if (patient["authorizedHospitals"].includes(hospital.wallet))
-              return patient["patientId"];
-            else return null;
-          })
-        );
+      fetchAllPatientsService(hospital.wallet)
+        .then(async (response) => {
+          // console.log(response.data.patients[0]['authorizedHospitals']);
+          const patientsArray = response.data.patients;
+          console.log(response);
+          const patientIdsArray = await Promise.all(
+            patientsArray.map((patient) => {
+              if (patient["authorizedHospitals"].includes(hospital.wallet))
+                return patient["patientId"];
+              else return null;
+            })
+          );
 
-        // removing null values
-        const filteredPatientIdsArray = patientIdsArray.filter(
-          (id) => id !== null
-        );
+          // removing null values
+          const filteredPatientIdsArray = patientIdsArray.filter(
+            (id) => id !== null
+          );
 
-        const patientDetailsArray = await Promise.all(
-          filteredPatientIdsArray.map(async (id)=> {
-            const patient = await Patient.findOne({patientId: id})
-            return patient;
-          })
-        )
+          const patientDetailsArray = await Promise.all(
+            filteredPatientIdsArray.map(async (id) => {
+              const patient = await Patient.findOne({ patientId: id });
+              return patient;
+            })
+          );
 
-        const filteredPatientDetailsArray = patientDetailsArray.filter(
-          (patient) => patient !== null
-        );
+          const filteredPatientDetailsArray = patientDetailsArray.filter(
+            (patient) => patient !== null
+          );
 
-        response.data.patients = undefined;
-        response.data.patients = filteredPatientDetailsArray;
-        res.send(response);
-      });
+          response.data.patients = undefined;
+          response.data.patients = filteredPatientDetailsArray;
+          res.send(response);
+        })
+        .catch((err) => {
+          const response = {
+            status: "failed",
+            message: "Internal error",
+            data: {
+              error: err.message,
+            },
+          };
+          res.status(500).json({
+            response,
+          });
+        });
     }
   } catch (error) {}
 };
