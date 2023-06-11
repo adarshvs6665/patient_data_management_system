@@ -11,11 +11,11 @@ hospital :
  ✓✓	login                                               :api-end-point -> method :post       url :hospital/sign-in   					body 	: email, password
  ✓	fetch profile                                       :api-end-point -> method :get        url :hospital/fetch-profile    			query	: hospitalId
  ✓✓	create patient                                      :api-end-point -> method :post       url :hospital/create-patient  				body 	: name, email, password, address, gender, dob, state, phone, wallet, hospitalId  
- ✓	update patient data                                 :api-end-point -> method :put        url :hospital/update-patient-report        body 	: hospitalId, patientId, patientReport
- ✓	share patient data to other hospitals               :api-end-point -> method :put        url :hospital/authorize-hospital           body 	: hospitalId, patientId, hospitalToBeAuthorizedId
- ✓	share patient data to insurance companies           :api-end-point -> method :put        url :hospital/authorize-insurance-company  body    : hospitalId, patientId, insuranceCompanyToBeAuthorizedId    
- ✓	fetch unauthorized hospitals 						:api-end-point -> method :get        url :hospital/fetch-unauthorized-hospitals   query	: patientId, hospitalId
- ✓	fetch unauthorized insurance companies 				:api-end-point -> method :get        url :hospital/fetch-unauthorized-insurances  query	: patientId, hospitalId
+ ✓✓	update patient data                                 :api-end-point -> method :put        url :hospital/update-patient-report        body 	: hospitalId, patientId, patientReport
+ ✓✓	share patient data to other hospitals               :api-end-point -> method :put        url :hospital/authorize-hospital           body 	: hospitalId, patientId, hospitalToBeAuthorizedId
+ ✓✓	share patient data to insurance companies           :api-end-point -> method :put        url :hospital/authorize-insurance-company  body    : hospitalId, patientId, insuranceCompanyToBeAuthorizedId    
+ ✓✓	fetch unauthorized hospitals 						:api-end-point -> method :get        url :hospital/fetch-unauthorized-hospitals   query	: patientId, hospitalId
+ ✓✓	fetch unauthorized insurance companies 				:api-end-point -> method :get        url :hospital/fetch-unauthorized-insurances  query	: patientId, hospitalId
  ✓✓	fetch authorized patients                           :api-end-point -> method :get        url :hospital/fetch-authorized-patients      query : hospitalId
 
 
