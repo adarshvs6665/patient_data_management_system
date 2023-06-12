@@ -10,7 +10,7 @@ router.get("/view-profile", patientController.patientViewProfileController);
 
 router.get("/view-report", patientController.patientViewReportController);
 
-router.get("/generate-report-pdf", patientController.patientGenerateMedicalReportController);
+router.post("/generate-report-pdf", patientController.patientGenerateMedicalReportController);
 
 router.get(
   "/view-hospital-access",
